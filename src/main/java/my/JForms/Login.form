@@ -79,9 +79,9 @@
               <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="usuarioTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="errorUsuarioLbl" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
+                  <Component id="usuarioTxt" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -108,6 +108,9 @@
           <Font name="JetBrains Mono" size="17" style="0"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="usuarioTxtFocusGained"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
@@ -137,6 +140,10 @@
           <Font name="JetBrains Mono" size="17" style="0"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="contrasenaTxtFocusGained"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="contrasenaTxtKeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="ingresarBtn">
       <Properties>
@@ -162,7 +169,7 @@
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/programa/Downloads/Logo.png"/>
+          <Image iconType="2" name="/home/programa/NetBeansProjects/SistemaContable/src/main/java/my/JForms/Logo.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
@@ -170,14 +177,14 @@
     <Component class="javax.swing.JLabel" name="errorUsuarioLbl">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/programa/Downloads/icons8-error-24.png"/>
+          <Image iconType="2" name="/home/programa/NetBeansProjects/SistemaContable/src/main/java/my/JForms/icons8-error-24.png"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="errorContraLbl">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/programa/Downloads/icons8-error-24.png"/>
+          <Image iconType="2" name="/home/programa/NetBeansProjects/SistemaContable/src/main/java/my/JForms/icons8-error-24.png"/>
         </Property>
       </Properties>
     </Component>

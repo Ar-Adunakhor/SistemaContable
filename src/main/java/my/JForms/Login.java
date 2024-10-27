@@ -5,6 +5,7 @@
 package my.JForms;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 /**
@@ -26,6 +27,7 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         errorUsuarioLbl.setVisible(false);
         errorContraLbl.setVisible(false);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -56,6 +58,11 @@ public class Login extends javax.swing.JFrame {
         setResizable(false);
 
         usuarioTxt.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        usuarioTxt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                usuarioTxtFocusGained(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -66,6 +73,16 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setText("Contraseña");
 
         contrasenaTxt.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        contrasenaTxt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                contrasenaTxtFocusGained(evt);
+            }
+        });
+        contrasenaTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                contrasenaTxtKeyPressed(evt);
+            }
+        });
 
         ingresarBtn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         ingresarBtn.setText("Ingresar");
@@ -80,12 +97,12 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setText("Sistema Contable");
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setIcon(new javax.swing.ImageIcon("/home/programa/Downloads/Logo.png")); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon("/home/programa/NetBeansProjects/SistemaContable/src/main/java/my/JForms/Logo.png")); // NOI18N
         jLabel5.setToolTipText("");
 
-        errorUsuarioLbl.setIcon(new javax.swing.ImageIcon("/home/programa/Downloads/icons8-error-24.png")); // NOI18N
+        errorUsuarioLbl.setIcon(new javax.swing.ImageIcon("/home/programa/NetBeansProjects/SistemaContable/src/main/java/my/JForms/icons8-error-24.png")); // NOI18N
 
-        errorContraLbl.setIcon(new javax.swing.ImageIcon("/home/programa/Downloads/icons8-error-24.png")); // NOI18N
+        errorContraLbl.setIcon(new javax.swing.ImageIcon("/home/programa/NetBeansProjects/SistemaContable/src/main/java/my/JForms/icons8-error-24.png")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -125,9 +142,9 @@ public class Login extends javax.swing.JFrame {
                 .addGap(70, 70, 70)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(usuarioTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(errorUsuarioLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(errorUsuarioLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usuarioTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(42, 42, 42)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -154,13 +171,31 @@ public class Login extends javax.swing.JFrame {
         
         if(usuario.equals(username) && contrasena.equals(password)){
             this.dispose();
-            // new Dashboard();
+            new Dashboard().setVisible(true);
         } else{
             JOptionPane.showMessageDialog(null, "Credenciales incorrectas", "Error de Inicio de Sesión", JOptionPane.ERROR_MESSAGE);
-            errorUsuarioLbl.setVisible(true);
-            errorContraLbl.setVisible(true);
+            mostrarErrores(true);
         }
     }//GEN-LAST:event_ingresarBtnActionPerformed
+
+    private void mostrarErrores(boolean vf){
+        errorUsuarioLbl.setVisible(vf);
+        errorContraLbl.setVisible(vf);
+    }
+    private void usuarioTxtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usuarioTxtFocusGained
+        mostrarErrores(false);
+    }//GEN-LAST:event_usuarioTxtFocusGained
+
+    private void contrasenaTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contrasenaTxtKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+            ingresarBtnActionPerformed(null);
+            contrasenaTxt.transferFocus();
+        }
+    }//GEN-LAST:event_contrasenaTxtKeyPressed
+
+    private void contrasenaTxtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_contrasenaTxtFocusGained
+        mostrarErrores(false);
+    }//GEN-LAST:event_contrasenaTxtFocusGained
 
     /**
      * @param args the command line arguments
