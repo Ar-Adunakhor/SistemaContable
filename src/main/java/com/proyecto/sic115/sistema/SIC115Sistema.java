@@ -3,7 +3,7 @@
  */
 
 package com.proyecto.sic115.sistema;
-import my.login.Login;
+import my.JForms.Login;
 /**
  *
  * @author Grupo 8
