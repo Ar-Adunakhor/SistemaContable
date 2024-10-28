@@ -11,6 +11,13 @@
         <exec.mainClass>com.proyecto.sic115.sistema.SIC115Sistema</exec.mainClass>
     </properties>
     <dependencies>
+    
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.7.4</version>
+            </dependency>
+        
         
     <dependency>
         <groupId>com.formdev</groupId>

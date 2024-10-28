@@ -5,14 +5,16 @@
 package my.JForms;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import javax.swing.Box;
+import java.sql.Connection;
+import java.sql.SQLException;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
  * @author programa
  */
 public class Dashboard extends javax.swing.JFrame {
-
+    private Connection conn;
     /**
      * Creates new form Dashboard
      */
@@ -20,11 +22,40 @@ public class Dashboard extends javax.swing.JFrame {
         try {
             // Cambia FlatLightLaf por el tema que quieras usar
             javax.swing.UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (Exception ex) {
+        } catch (UnsupportedLookAndFeelException ex) {
             System.err.println("No se pudo aplicar FlatLaf");
         }
         initComponents();
         setLocationRelativeTo(null);
+    }
+
+    public Dashboard(Connection connection) {
+        try {
+            // Cambia FlatLightLaf por el tema que quieras usar
+            javax.swing.UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException ex) {
+            System.err.println("No se pudo aplicar FlatLaf");
+        }
+        initComponents();
+        setLocationRelativeTo(null);
+        conn = connection;
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                cerrarConnection();
+            }
+        });
+    }
+    private void cerrarConnection(){
+        if (conn != null) {
+            try {
+                conn.close();
+                System.out.println("Connection closed.");
+            } catch (SQLException e) {
+                System.out.println("Error closing connection.");
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -46,8 +77,21 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar2 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         ayudaMn = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
         salirMn = new javax.swing.JMenu();
         salirBtn = new javax.swing.JMenuItem();
 
@@ -67,10 +111,7 @@ public class Dashboard extends javax.swing.JFrame {
         jPanelTransacciones.setLayout(jPanelTransaccionesLayout);
         jPanelTransaccionesLayout.setHorizontalGroup(
             jPanelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelTransaccionesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1170, Short.MAX_VALUE)
         );
         jPanelTransaccionesLayout.setVerticalGroup(
             jPanelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,15 +149,48 @@ public class Dashboard extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Libro mayor", jPanel4);
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"1", "Activos", null, null},
+                {null, "11", "Corriente", null},
+                {null, null, "111", "Caja"},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jTable1.setEnabled(false);
+        jScrollPane1.setViewportView(jTable1);
+
+        jLabel2.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Cuentas de EDC Solutions");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1170, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(104, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 971, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(95, 95, 95))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 756, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Cátalogo de cuentas", jPanel5);
@@ -126,7 +200,41 @@ public class Dashboard extends javax.swing.JFrame {
 
         jMenuBar2.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
+        jMenu1.setText("Temas");
+
+        jMenuItem6.setText("Tema Oscuro");
+        jMenu1.add(jMenuItem6);
+
+        jMenuItem7.setText("Tema Claro");
+        jMenu1.add(jMenuItem7);
+
+        jMenuBar2.add(jMenu1);
+
         ayudaMn.setText("Ayuda");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        jMenuItem1.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
+        jMenuItem1.setText("Manual");
+        ayudaMn.add(jMenuItem1);
+
+        jMenuItem2.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
+        jMenuItem2.setText("Soporte");
+        ayudaMn.add(jMenuItem2);
+        ayudaMn.add(jSeparator2);
+
+        jMenuItem3.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
+        jMenuItem3.setText("Reportar problema");
+        ayudaMn.add(jMenuItem3);
+        ayudaMn.add(jSeparator3);
+
+        jMenuItem4.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
+        jMenuItem4.setText("Buscar actualizaciones");
+        ayudaMn.add(jMenuItem4);
+
+        jMenuItem5.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
+        jMenuItem5.setText("Acerca de");
+        ayudaMn.add(jMenuItem5);
+
         jMenuBar2.add(ayudaMn);
 
         salirMn.setText("Cerrar sesión");
@@ -202,16 +310,29 @@ public class Dashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ayudaMn;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelTransacciones;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JMenuItem salirBtn;
     private javax.swing.JMenu salirMn;
     // End of variables declaration//GEN-END:variables

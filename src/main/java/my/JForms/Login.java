@@ -4,30 +4,50 @@
  */
 package my.JForms;
 import com.formdev.flatlaf.FlatLightLaf;
-import java.awt.Color;
 import java.awt.event.KeyEvent;
-import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.swing.UnsupportedLookAndFeelException;
 /**
  *
  * @author programa
  */
 public class Login extends javax.swing.JFrame {
+    private Connection conn;
 
     /**
      * Creates new form Login
      */
     public Login() {
         try {
-            // Cambia FlatLightLaf por el tema que quieras usar
+            //Cambia FlatLightLaf por el tema que quieras usar
             javax.swing.UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (Exception ex) {
+        } catch (UnsupportedLookAndFeelException ex) {
             System.err.println("No se pudo aplicar FlatLaf");
         }
         initComponents();
         errorUsuarioLbl.setVisible(false);
         errorContraLbl.setVisible(false);
         setLocationRelativeTo(null);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                cerrarConnection(conn); 
+            }
+        });
+    }
+    private void cerrarConnection(Connection conn){
+        if (conn != null) {
+            try {
+                conn.close();
+                System.out.println("Connection closed.");
+            } catch (SQLException e) {
+                System.out.println("Error closing connection.");
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -112,9 +132,6 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -132,14 +149,18 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(ingresarBtn)
-                        .addGap(96, 96, 96))))
+                        .addGap(96, 96, 96))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(41, 41, 41)
                 .addComponent(jLabel3)
-                .addGap(70, 70, 70)
+                .addGap(58, 58, 58)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,16 +184,15 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ingresarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarBtnActionPerformed
-        String username = "admin";
-        String password = "sis_conta";
-        
+        String url = "jdbc:postgresql://localhost:5432/sic115";
         String usuario = usuarioTxt.getText();
         String contrasena = new String(contrasenaTxt.getPassword());
         
-        if(usuario.equals(username) && contrasena.equals(password)){
+        try{
+            conn = DriverManager.getConnection(url, usuario, contrasena);
             this.dispose();
-            new Dashboard().setVisible(true);
-        } else{
+            new Dashboard(conn).setVisible(true);
+        }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Credenciales incorrectas", "Error de Inicio de Sesión", JOptionPane.ERROR_MESSAGE);
             mostrarErrores(true);
         }
