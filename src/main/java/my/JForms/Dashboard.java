@@ -8,6 +8,9 @@ import com.formdev.flatlaf.FlatLightLaf;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.UnsupportedLookAndFeelException;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.*;
+import java.util.Date;
 
 /**
  *
@@ -70,12 +73,20 @@ public class Dashboard extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jSeparator1 = new javax.swing.JSeparator();
         jPopupMenu1 = new javax.swing.JPopupMenu();
+        singleDate1 = new raven.datetime.component.date.SingleDate();
         jPanel1 = new javax.swing.JPanel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanelTransacciones = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        fechaPck = new com.github.lgooddatepicker.components.DatePicker();
+        transaccionCmb = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -103,22 +114,58 @@ public class Dashboard extends javax.swing.JFrame {
 
         jTabbedPane2.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Ingreso de Transacciones");
+        jLabel1.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
+
+        jLabel3.setText("Fecha realizada");
+
+        fechaPck.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+
+        transaccionCmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--", "Ingreso", "Salida", "Préstamo", "Interno" }));
+
+        jLabel4.setText("Tipo de transacción");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("Descripción");
+        jScrollPane2.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout jPanelTransaccionesLayout = new javax.swing.GroupLayout(jPanelTransacciones);
         jPanelTransacciones.setLayout(jPanelTransaccionesLayout);
         jPanelTransaccionesLayout.setHorizontalGroup(
             jPanelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1170, Short.MAX_VALUE)
+            .addGroup(jPanelTransaccionesLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelTransaccionesLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelTransaccionesLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(fechaPck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(transaccionCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(278, 278, 278))))
         );
         jPanelTransaccionesLayout.setVerticalGroup(
             jPanelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTransaccionesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(677, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addGroup(jPanelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(fechaPck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(transaccionCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 447, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(62, 62, 62))
         );
 
         jTabbedPane2.addTab("Transacciones", jPanelTransacciones);
@@ -149,26 +196,39 @@ public class Dashboard extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Libro mayor", jPanel4);
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1170, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 756, Short.MAX_VALUE)
+        );
+
+        jTabbedPane2.addTab("Costos", jPanel2);
+
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "Activos", null, null},
-                {null, "11", "Corriente", null},
-                {null, null, "111", "Caja"},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {"1", "Activos", null},
+                {null, "11", "Corriente"},
+                {null, null, "111"},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Cuenta", "Nombre", "Tipo"
             }
         ));
         jTable1.setEnabled(false);
         jScrollPane1.setViewportView(jTable1);
 
-        jLabel2.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Cuentas de EDC Solutions");
+        jLabel2.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -309,8 +369,11 @@ public class Dashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ayudaMn;
+    private com.github.lgooddatepicker.components.DatePicker fechaPck;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar2;
@@ -322,18 +385,23 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelTransacciones;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JMenuItem salirBtn;
     private javax.swing.JMenu salirMn;
+    private raven.datetime.component.date.SingleDate singleDate1;
+    private javax.swing.JComboBox<String> transaccionCmb;
     // End of variables declaration//GEN-END:variables
 }
