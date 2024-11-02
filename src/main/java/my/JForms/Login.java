@@ -121,8 +121,10 @@ public class Login extends javax.swing.JFrame {
         jLabel5.setToolTipText("");
 
         errorUsuarioLbl.setIcon(new javax.swing.ImageIcon("/home/programa/NetBeansProjects/SistemaContable/src/main/java/my/JForms/icons8-error-24.png")); // NOI18N
+        errorUsuarioLbl.setToolTipText("Ingrese usuario válido");
 
         errorContraLbl.setIcon(new javax.swing.ImageIcon("/home/programa/NetBeansProjects/SistemaContable/src/main/java/my/JForms/icons8-error-24.png")); // NOI18N
+        errorContraLbl.setToolTipText("Ingrese contraseña del usuario");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
