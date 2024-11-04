@@ -798,17 +798,101 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_ingresarBtnActionPerformed
 
     private void cierreContableJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cierreContableJMnActionPerformed
+        saldarCuentas();
         mostrarMenusCierre(true, 5);
         mostrarBalance("Balance de comprobación");
         transferirTransaccionesALegacy();
         actualizarDiarioTbl();
     }//GEN-LAST:event_cierreContableJMnActionPerformed
 
+    private void saldarCuentas() {
+        try {
+            // Consulta para obtener todas las cuentas
+            String sql = "SELECT codigo, naturaleza, saldo_inicial, debe, haber FROM sistemacontable.cuentas";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int codigo = rs.getInt("codigo");
+                int naturaleza = rs.getInt("naturaleza");
+                double saldoInicial = rs.getDouble("saldo_inicial");
+                double debe = rs.getDouble("debe");
+                double haber = rs.getDouble("haber");
+
+                if (naturaleza == 1) {
+                    debe += saldoInicial;
+                    debe = debe - haber;
+                    haber = 0;
+                } else if (naturaleza == 0) {
+                    haber += saldoInicial;
+                    haber = haber - debe;
+                    debe = 0;
+                }
+
+                // Actualizamos la cuenta con los nuevos valores de debe, haber y saldo_inicial (en 0)
+                String updateSql = "UPDATE sistemacontable.cuentas SET debe = ?, haber = ?, saldo_inicial = 0 WHERE codigo = ?";
+                PreparedStatement updateStmt = conn.prepareStatement(updateSql);
+                updateStmt.setDouble(1, debe);
+                updateStmt.setDouble(2, haber);
+                updateStmt.setInt(3, codigo);
+                updateStmt.executeUpdate();
+                updateStmt.close();
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            enviarError("No se pudo saldar cuentas");
+        }
+    }
     private void nuevoCicloBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoCicloBtnActionPerformed
         mostrarMenusCierre(false, 0);
         menuJTb.setEnabledAt(6,false);
+        nuevosSaldosIniciales();
+        cargarLibroMayor();
     }//GEN-LAST:event_nuevoCicloBtnActionPerformed
 
+    private void nuevosSaldosIniciales() {
+        try {
+            // Consulta para obtener todas las cuentas
+            String sql = "SELECT codigo, naturaleza, debe, haber FROM sistemacontable.cuentas";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int codigo = rs.getInt("codigo");
+                int naturaleza = rs.getInt("naturaleza");
+                double debe = rs.getDouble("debe");
+                double haber = rs.getDouble("haber");
+                double saldoInicial = 0;
+
+                if (naturaleza == 1) {
+                    // Si es acreedora (naturaleza = 1), pasamos el valor de 'debe' a 'saldo_inicial'
+                    saldoInicial = debe;
+                    debe = 0; // Dejar el campo 'debe' en 0
+                } else if (naturaleza == 0) {
+                    // Si es deudora (naturaleza = 0), pasamos el valor de 'haber' a 'saldo_inicial'
+                    saldoInicial = haber;
+                    haber = 0; // Dejar el campo 'haber' en 0
+                }
+
+                // Actualizamos la cuenta con los nuevos valores de saldo_inicial, debe y haber
+                String updateSql = "UPDATE sistemacontable.cuentas SET saldo_inicial = ?, debe = ?, haber = ? WHERE codigo = ?";
+                PreparedStatement updateStmt = conn.prepareStatement(updateSql);
+                updateStmt.setDouble(1, saldoInicial);
+                updateStmt.setDouble(2, debe);
+                updateStmt.setDouble(3, haber);
+                updateStmt.setInt(4, codigo);
+                updateStmt.executeUpdate();
+                updateStmt.close();
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     private void estadosFinanicerosJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadosFinanicerosJMnActionPerformed
         menuJTb.setEnabledAt(6,true);
         estadosFinanicerosJMn.setEnabled(false);
