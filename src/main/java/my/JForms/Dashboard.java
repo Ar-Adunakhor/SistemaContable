@@ -43,7 +43,6 @@ public class Dashboard extends javax.swing.JFrame {
 
     public Dashboard(Connection connection) {
         try {
-            // Cambia FlatLightLaf por el tema que quieras usar
             javax.swing.UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException ex) {
             System.err.println("No se pudo aplicar FlatLaf");
@@ -53,6 +52,7 @@ public class Dashboard extends javax.swing.JFrame {
         conn = connection;
         cargarDatosCuentas();
         actualizarDiarioTbl();
+        cargarLibroMayor();
         establecerNumeroTransaccion();
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -68,7 +68,6 @@ public class Dashboard extends javax.swing.JFrame {
                 System.out.println("Connection closed.");
             } catch (SQLException e) {
                 System.out.println("Error closing connection.");
-                e.printStackTrace();
             }
         }
     }
@@ -126,15 +125,14 @@ public class Dashboard extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         costosJPn = new javax.swing.JPanel();
         catalogoJPn = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         cuentasTbl = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         agregarCuentaBtn = new javax.swing.JButton();
-        actualizarBtn = new javax.swing.JButton();
         barraJMn = new javax.swing.JMenuBar();
         archivoJMn = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
@@ -441,10 +439,21 @@ public class Dashboard extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Cuenta", "Nombre", "Debe", "Haber", "Saldo"
+                "Cuenta", "Nombre", "Saldo inicial", "Debe", "Haber"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane5.setViewportView(mayorTbl);
+        if (mayorTbl.getColumnModel().getColumnCount() > 0) {
+            mayorTbl.getColumnModel().getColumn(0).setPreferredWidth(10);
+        }
 
         javax.swing.GroupLayout mayorJPnLayout = new javax.swing.GroupLayout(mayorJPn);
         mayorJPn.setLayout(mayorJPnLayout);
@@ -456,7 +465,7 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(mayorJPnLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 1122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 1127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mayorJPnLayout.setVerticalGroup(
@@ -486,11 +495,11 @@ public class Dashboard extends javax.swing.JFrame {
 
         jButton1.setText("Nuevo ciclo fiscal");
 
-        jButton2.setText("Mostrar estado de resultado");
-
-        jButton3.setText("Estado de capital");
+        jButton2.setText("Estado de balance");
 
         jButton4.setText("Imprimir");
+
+        jButton5.setText("Estado de resultado");
 
         javax.swing.GroupLayout estadosJPnLayout = new javax.swing.GroupLayout(estadosJPn);
         estadosJPn.setLayout(estadosJPnLayout);
@@ -498,21 +507,17 @@ public class Dashboard extends javax.swing.JFrame {
             estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(estadosJPnLayout.createSequentialGroup()
                 .addGap(52, 52, 52)
-                .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(estadosJPnLayout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addGap(149, 149, 149)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(65, 65, 65))
-                    .addGroup(estadosJPnLayout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 1064, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(54, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, estadosJPnLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton4)
-                .addGap(210, 210, 210))
+                .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton4)
+                    .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(estadosJPnLayout.createSequentialGroup()
+                            .addComponent(jButton2)
+                            .addGap(267, 267, 267)
+                            .addComponent(jButton5)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 1064, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
         estadosJPnLayout.setVerticalGroup(
             estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -521,12 +526,12 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton5))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addComponent(jButton4)
-                .addContainerGap(127, Short.MAX_VALUE))
+                .addGap(68, 68, 68))
         );
 
         menuJTb.addTab("Estados Financieros", estadosJPn);
@@ -566,14 +571,6 @@ public class Dashboard extends javax.swing.JFrame {
         agregarCuentaBtn.setText("Agregar cuenta");
         agregarCuentaBtn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
-        actualizarBtn.setText("Actualizar");
-        actualizarBtn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
-        actualizarBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                actualizarBtnActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout catalogoJPnLayout = new javax.swing.GroupLayout(catalogoJPn);
         catalogoJPn.setLayout(catalogoJPnLayout);
         catalogoJPnLayout.setHorizontalGroup(
@@ -584,11 +581,8 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, catalogoJPnLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(catalogoJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(catalogoJPnLayout.createSequentialGroup()
-                        .addComponent(actualizarBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(agregarCuentaBtn))
+                .addGroup(catalogoJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(agregarCuentaBtn)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 971, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(89, 89, 89))
         );
@@ -598,9 +592,7 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addGroup(catalogoJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(agregarCuentaBtn)
-                    .addComponent(actualizarBtn))
+                .addComponent(agregarCuentaBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(205, 205, 205))
@@ -722,7 +714,9 @@ public class Dashboard extends javax.swing.JFrame {
                 ingresarTransaccion();
             }
             actualizarDiarioTbl();
+            cargarLibroMayor();
             montoTxt.setText("");
+            descuentoTxt.setText("0.00");
             descripcionTxt.setText("");
             cuentaDebeTxt.setText("");
             cuentaHaberTxt.setText("");
@@ -801,9 +795,9 @@ public class Dashboard extends javax.swing.JFrame {
     }
     
     private void ingresarTransaccion() {
-        String sql = "INSERT INTO sistemacontable.transacciones (numero, fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sistemacontable.transacciones (numero, fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         BigDecimal monto = new BigDecimal(montoTxt.getText());
+        monto = monto.subtract(new BigDecimal(descuentoTxt.getText()));
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, Integer.parseInt(numSpn.getValue().toString())); 
@@ -817,17 +811,23 @@ public class Dashboard extends javax.swing.JFrame {
             pstmt.setNull(9, Types.DECIMAL); // O bien, puedes usar BigDecimal.ZERO si así lo requiere tu esquema
 
             pstmt.executeUpdate();
-
+            modificarCuentas(
+                    Integer.parseInt(cuentaDebeTxt.getText().trim()), // cuentaDebe
+                    monto,                                        // montoDebe
+                    Integer.parseInt(cuentaHaberTxt.getText().trim()), // cuentaHaber
+                    monto,                                       // montoHaber
+                    0,                                        // cuentaIVA
+                    new BigDecimal(0)                                         // montoIVA
+             );
             JOptionPane.showMessageDialog(null, "Transacción ingresada", "Transacción exitosa", JOptionPane.PLAIN_MESSAGE);
         } catch (SQLException ex) {
             enviarError("Error al ejecutar");
         }
     }
     private void ingresarTransaccion(int cuentaIVA) {
-        String sql = "INSERT INTO sistemacontable.transacciones (numero, fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva) " +
-                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sistemacontable.transacciones (numero, fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         BigDecimal monto = new BigDecimal(montoTxt.getText());
-        int porcentajeSeleccionado = porcentajeCmb.getSelectedIndex();
+        //int porcentajeSeleccionado = porcentajeCmb.getSelectedIndex();
         BigDecimal porcentajeIVA = BigDecimal.valueOf(0.13);
         BigDecimal montoIVA = monto.multiply(porcentajeIVA).setScale(2, RoundingMode.HALF_UP);
         BigDecimal montoDebe = monto;
@@ -854,16 +854,52 @@ public class Dashboard extends javax.swing.JFrame {
             pstmt.setBigDecimal(9, montoIVA);
 
             pstmt.executeUpdate();
-
+            modificarCuentas(
+                    Integer.parseInt(cuentaDebeTxt.getText().trim()), // cuentaDebe
+                    montoDebe,                                        // montoDebe
+                    Integer.parseInt(cuentaHaberTxt.getText().trim()), // cuentaHaber
+                    montoHaber,                                       // montoHaber
+                    cuentaIVA,                                        // cuentaIVA
+                    montoIVA                                         // montoIVA
+             );
             JOptionPane.showMessageDialog(null, "Transacción ingresada", "Transacción exitosa", JOptionPane.PLAIN_MESSAGE);
         }catch (SQLException ex) {
             enviarError("Error al ejecutar");
         }
     }
-    private void actualizarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarBtnActionPerformed
-        cargarDatosCuentas();
-    }//GEN-LAST:event_actualizarBtnActionPerformed
+    
+    public void modificarCuentas(int cuentaDebe, BigDecimal montoDebe, int cuentaHaber, BigDecimal montoHaber, int cuentaIVA, BigDecimal montoIVA){
+        String queryUpdateDebe = "UPDATE sistemacontable.cuentas SET debe = debe + ? WHERE codigo = ?";
+        String queryUpdateHaber = "UPDATE sistemacontable.cuentas SET haber = haber + ? WHERE codigo = ?";
+    
+        try (PreparedStatement psDebe = conn.prepareStatement(queryUpdateDebe);
+             PreparedStatement psHaber = conn.prepareStatement(queryUpdateHaber)) {
 
+            // Actualizar el campo 'debe' para la cuenta deudora
+            psDebe.setBigDecimal(1, montoDebe);
+            psDebe.setInt(2, cuentaDebe);
+            psDebe.executeUpdate();
+
+            // Actualizar el campo 'haber' para la cuenta acreedora
+            psHaber.setBigDecimal(1, montoHaber);
+            psHaber.setInt(2, cuentaHaber);
+            psHaber.executeUpdate();
+
+            if(cuentaIVA==115){
+                psDebe.setBigDecimal(1, montoIVA);
+                psDebe.setInt(2, cuentaIVA);
+                psDebe.executeUpdate();
+            }else if(cuentaIVA==212){
+                psHaber.setBigDecimal(1, montoIVA);
+                psHaber.setInt(2, cuentaIVA);
+                psHaber.executeUpdate();
+            }
+
+
+        } catch (SQLException e) {
+            enviarError("Error al actualizar cuentas");
+        }
+    }
     public void cargarDatosCuentas() {
         String query = "SELECT codigo, nombre, tipo FROM sistemacontable.cuentas ORDER BY codigo";
 
@@ -886,7 +922,6 @@ public class Dashboard extends javax.swing.JFrame {
                 model.addRow(row);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e.getMessage());
         }
     }
@@ -917,6 +952,34 @@ public class Dashboard extends javax.swing.JFrame {
             }
         } catch (SQLException ex) {
             enviarError("Error al actualizar el diario");
+        }
+    }
+    
+    public void cargarLibroMayor() {
+        String query = "SELECT codigo, nombre, saldo_inicial, debe, haber FROM sistemacontable.cuentas ORDER BY codigo";
+
+        try {
+            // Crear un modelo de tabla y limpiarlo para añadir datos
+            DefaultTableModel model = (DefaultTableModel) mayorTbl.getModel();
+            model.setRowCount(0); // Limpiar las filas existentes
+
+            // Ejecutar la consulta
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            // Llenar el modelo de tabla con los datos del ResultSet
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getString("codigo"),
+                    rs.getString("nombre"),
+                    rs.getString("saldo_inicial"),
+                    rs.getString("debe"),
+                    rs.getString("haber")
+                };
+                model.addRow(row);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e.getMessage());
         }
     }
 
@@ -983,7 +1046,6 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton actualizarBtn;
     private javax.swing.JButton agregarCuentaBtn;
     private javax.swing.JMenu archivoJMn;
     private javax.swing.JMenu ayudaJMn;
@@ -1005,8 +1067,8 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JButton ingresarBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
