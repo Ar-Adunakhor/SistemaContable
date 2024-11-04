@@ -50,6 +50,7 @@ public class Dashboard extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         menuJTb.setEnabledAt(5,false);
+        menuJTb.setEnabledAt(6,false);
         estadosFinanicerosJMn.setEnabled(false);
         conn = connection;
         cargarDatosCuentas();
@@ -118,6 +119,7 @@ public class Dashboard extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         diarioTbl = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
+        legacyDiarioBtn = new javax.swing.JToggleButton();
         mayorJPn = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -135,8 +137,9 @@ public class Dashboard extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         tipoBalanceCmb = new javax.swing.JComboBox<>();
+        estadosFinanJPn = new javax.swing.JPanel();
         barraJMn = new javax.swing.JMenuBar();
-        archivoJMn = new javax.swing.JMenu();
+        sistemaJMn = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         cierreContableJMn = new javax.swing.JMenuItem();
@@ -404,6 +407,14 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel10.setText("Registro de Transacciones");
         jLabel10.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
 
+        legacyDiarioBtn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        legacyDiarioBtn.setText("Mostrar legacy");
+        legacyDiarioBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                legacyDiarioBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout diarioJPnLayout = new javax.swing.GroupLayout(diarioJPn);
         diarioJPn.setLayout(diarioJPnLayout);
         diarioJPnLayout.setHorizontalGroup(
@@ -414,7 +425,9 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(diarioJPnLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(diarioJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(legacyDiarioBtn)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1126, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         diarioJPnLayout.setVerticalGroup(
@@ -422,9 +435,11 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(diarioJPnLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
+                .addGap(1, 1, 1)
+                .addComponent(legacyDiarioBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         menuJTb.addTab("Libro diario", diarioJPn);
@@ -579,6 +594,7 @@ public class Dashboard extends javax.swing.JFrame {
         });
 
         jButton4.setText("Imprimir");
+        jButton4.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         jLabel4.setText("Seleccionar tipo de balance");
@@ -616,7 +632,7 @@ public class Dashboard extends javax.swing.JFrame {
                     .addComponent(tipoBalanceCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(68, 68, 68))
         );
@@ -630,18 +646,31 @@ public class Dashboard extends javax.swing.JFrame {
 
         menuJTb.addTab("Balances", estadosJPn);
 
+        javax.swing.GroupLayout estadosFinanJPnLayout = new javax.swing.GroupLayout(estadosFinanJPn);
+        estadosFinanJPn.setLayout(estadosFinanJPnLayout);
+        estadosFinanJPnLayout.setHorizontalGroup(
+            estadosFinanJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1170, Short.MAX_VALUE)
+        );
+        estadosFinanJPnLayout.setVerticalGroup(
+            estadosFinanJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 756, Short.MAX_VALUE)
+        );
+
+        menuJTb.addTab("Estados Financieros", estadosFinanJPn);
+
         primerPanel.add(menuJTb, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1170, 800));
         menuJTb.getAccessibleContext().setAccessibleName("pestanas");
 
         barraJMn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
-        archivoJMn.setText("Sistema");
-        archivoJMn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        sistemaJMn.setText("Sistema");
+        sistemaJMn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
         jMenuItem8.setText("Calcular Costo Producto");
         jMenuItem8.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
-        archivoJMn.add(jMenuItem8);
-        archivoJMn.add(jSeparator4);
+        sistemaJMn.add(jMenuItem8);
+        sistemaJMn.add(jSeparator4);
 
         cierreContableJMn.setText("Realizar Cierre Contable");
         cierreContableJMn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
@@ -650,14 +679,19 @@ public class Dashboard extends javax.swing.JFrame {
                 cierreContableJMnActionPerformed(evt);
             }
         });
-        archivoJMn.add(cierreContableJMn);
-        archivoJMn.add(jSeparator5);
+        sistemaJMn.add(cierreContableJMn);
+        sistemaJMn.add(jSeparator5);
 
         estadosFinanicerosJMn.setText("Generar Estados Financieros");
         estadosFinanicerosJMn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
-        archivoJMn.add(estadosFinanicerosJMn);
+        estadosFinanicerosJMn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                estadosFinanicerosJMnActionPerformed(evt);
+            }
+        });
+        sistemaJMn.add(estadosFinanicerosJMn);
 
-        barraJMn.add(archivoJMn);
+        barraJMn.add(sistemaJMn);
 
         temasJMn.setText("Temas");
         temasJMn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
@@ -766,20 +800,54 @@ public class Dashboard extends javax.swing.JFrame {
     private void cierreContableJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cierreContableJMnActionPerformed
         mostrarMenusCierre(true, 5);
         mostrarBalance("Balance de comprobación");
+        transferirTransaccionesALegacy();
+        actualizarDiarioTbl();
     }//GEN-LAST:event_cierreContableJMnActionPerformed
 
     private void nuevoCicloBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoCicloBtnActionPerformed
         mostrarMenusCierre(false, 0);
+        menuJTb.setEnabledAt(6,false);
     }//GEN-LAST:event_nuevoCicloBtnActionPerformed
+
+    private void estadosFinanicerosJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadosFinanicerosJMnActionPerformed
+        menuJTb.setEnabledAt(6,true);
+        estadosFinanicerosJMn.setEnabled(false);
+    }//GEN-LAST:event_estadosFinanicerosJMnActionPerformed
+
+    private void legacyDiarioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_legacyDiarioBtnActionPerformed
+        if (legacyDiarioBtn.isSelected()) {
+            actualizarDiarioTblLegacy();
+        } else {
+            actualizarDiarioTbl();
+        }
+    }//GEN-LAST:event_legacyDiarioBtnActionPerformed
     private void mostrarMenusCierre(boolean cierreNuevo, int indice){
         nuevoCicloBtn.setEnabled(cierreNuevo);
         cierreContableJMn.setEnabled(!cierreNuevo);
         menuJTb.setEnabledAt(0,!cierreNuevo);
         menuJTb.setSelectedIndex(indice);
         menuJTb.setEnabledAt(5,cierreNuevo);
+        estadosFinanicerosJMn.setEnabled(cierreNuevo);
         agregarCuentaBtn.setEnabled(!cierreNuevo);
     }
     
+    private void transferirTransaccionesALegacy() {
+    String sqlInsert = "INSERT INTO sistemacontable.legacy_transacciones (numero, fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva) " +
+                       "SELECT numero, fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva FROM sistemacontable.transacciones";
+
+    try (Statement stmt = conn.createStatement()) {
+        // Ejecutar la inserción
+        stmt.executeUpdate(sqlInsert);
+        // Opción de eliminar las transacciones después de moverlas
+        String sqlDelete = "DELETE FROM sistemacontable.transacciones";
+        stmt.executeUpdate(sqlDelete);
+        
+        System.out.println("Transacciones transferidas a legacy_transacciones con éxito.");
+    } catch (SQLException ex) {
+        enviarError("No se pudo transferir a legacy");
+    }
+}
+
     private void mostrarBalance(String tipoBalance) {
         DefaultTableModel modelo = (DefaultTableModel) balanceTbl.getModel();
         modelo.setRowCount(0); // Limpiar la tabla antes de llenar
@@ -1033,6 +1101,35 @@ public class Dashboard extends javax.swing.JFrame {
             enviarError("Error al actualizar el diario");
         }
     }
+    private void actualizarDiarioTblLegacy() {
+        String sql = "SELECT * FROM sistemacontable.legacy_transacciones";
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            // Limpiar la tabla anterior antes de actualizar
+            DefaultTableModel model = (DefaultTableModel) diarioTbl.getModel();
+            model.setRowCount(0); // Limpiar la tabla
+
+            // Llenar la tabla con datos de transacciones
+            while (rs.next()) {
+                Object[] row = new Object[] {
+                    rs.getInt("numero"),
+                    rs.getDate("fecha"),
+                    rs.getString("descripcion"),
+                    rs.getInt("cuenta_debe_id"),
+                    rs.getBigDecimal("monto_debe"),
+                    rs.getInt("cuenta_haber_id"),
+                    rs.getBigDecimal("monto_haber"),
+                    rs.getInt("cuenta_iva_id"),
+                    rs.getBigDecimal("monto_iva")
+                };
+                model.addRow(row);
+            }
+        } catch (SQLException ex) {
+            enviarError("Error al actualizar el diario");
+        }
+    }
     
     public void cargarLibroMayor() {
         String query = "SELECT codigo, nombre, saldo_inicial, debe, haber FROM sistemacontable.cuentas ORDER BY codigo";
@@ -1128,7 +1225,6 @@ public class Dashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarCuentaBtn;
-    private javax.swing.JMenu archivoJMn;
     private javax.swing.JMenu ayudaJMn;
     private javax.swing.JTable balanceTbl;
     private javax.swing.JMenuBar barraJMn;
@@ -1144,6 +1240,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField descuentoTxt;
     private javax.swing.JPanel diarioJPn;
     private javax.swing.JTable diarioTbl;
+    private javax.swing.JPanel estadosFinanJPn;
     private javax.swing.JMenuItem estadosFinanicerosJMn;
     private javax.swing.JPanel estadosJPn;
     private com.github.lgooddatepicker.components.DatePicker fechaPck;
@@ -1184,6 +1281,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JToggleButton legacyDiarioBtn;
     private javax.swing.JPanel mayorJPn;
     private javax.swing.JTable mayorTbl;
     private javax.swing.JTabbedPane menuJTb;
@@ -1196,6 +1294,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JMenuItem salirBtn;
     private javax.swing.JMenu salirJMn;
     private raven.datetime.component.date.SingleDate singleDate1;
+    private javax.swing.JMenu sistemaJMn;
     private javax.swing.JMenu temasJMn;
     private javax.swing.JComboBox<String> tipoBalanceCmb;
     private javax.swing.JPanel transaccionesJPn;
