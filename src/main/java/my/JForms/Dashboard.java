@@ -5,6 +5,8 @@
 package my.JForms;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
@@ -132,7 +134,7 @@ public class Dashboard extends javax.swing.JFrame {
         nuevoCicloBtn = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        tipoBalanceCmb = new javax.swing.JComboBox<>();
         barraJMn = new javax.swing.JMenuBar();
         archivoJMn = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
@@ -547,15 +549,23 @@ public class Dashboard extends javax.swing.JFrame {
 
         balanceTbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Cuenta", "Debe", "Haber"
+                "Cuenta", "Nombre", "Debe", "Haber"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, false, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         balanceTbl.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         jScrollPane4.setViewportView(balanceTbl);
 
@@ -573,8 +583,8 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         jLabel4.setText("Seleccionar tipo de balance");
 
-        jComboBox1.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Balance de comprobación", "Estado de resultado", "Balance general" }));
+        tipoBalanceCmb.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        tipoBalanceCmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Balance de comprobación", "Estado de resultado", "Balance general" }));
 
         javax.swing.GroupLayout estadosJPnLayout = new javax.swing.GroupLayout(estadosJPn);
         estadosJPn.setLayout(estadosJPnLayout);
@@ -591,7 +601,7 @@ public class Dashboard extends javax.swing.JFrame {
                         .addGap(60, 60, 60)
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tipoBalanceCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(nuevoCicloBtn)))
                 .addContainerGap(54, Short.MAX_VALUE))
@@ -603,13 +613,20 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nuevoCicloBtn)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tipoBalanceCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(68, 68, 68))
         );
+
+        tipoBalanceCmb.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mostrarBalance(tipoBalanceCmb.getSelectedItem().toString());
+            }
+        });
 
         menuJTb.addTab("Balances", estadosJPn);
 
@@ -748,6 +765,7 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void cierreContableJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cierreContableJMnActionPerformed
         mostrarMenusCierre(true, 5);
+        mostrarBalance("Balance de comprobación");
     }//GEN-LAST:event_cierreContableJMnActionPerformed
 
     private void nuevoCicloBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoCicloBtnActionPerformed
@@ -761,6 +779,33 @@ public class Dashboard extends javax.swing.JFrame {
         menuJTb.setEnabledAt(5,cierreNuevo);
         agregarCuentaBtn.setEnabled(!cierreNuevo);
     }
+    
+    private void mostrarBalance(String tipoBalance) {
+        DefaultTableModel modelo = (DefaultTableModel) balanceTbl.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla antes de llenar
+
+        String sql = "";
+
+        switch (tipoBalance) {
+            case "Balance de comprobación" -> sql = "SELECT codigo, nombre, debe, haber FROM sistemacontable.cuentas ORDER BY codigo";
+            case "Estado de resultado" -> sql = "SELECT codigo, nombre, debe, haber FROM sistemacontable.cuentas WHERE tipo_balance = 0 ORDER BY codigo";
+            case "Balance general" -> sql = "SELECT codigo, nombre, debe, haber FROM sistemacontable.cuentas WHERE tipo_balance = 1 ORDER BY codigo";
+        }
+
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Object[] fila = new Object[6];
+                fila[0] = rs.getInt("codigo");
+                fila[1] = rs.getString("nombre");
+                fila[2] = rs.getBigDecimal("debe");
+                fila[3] = rs.getBigDecimal("haber");
+                modelo.addRow(fila);
+            }
+        } catch (SQLException ex) {
+            enviarError("No se pudo generar balance"); // Manejo de excepciones
+        }
+    }
+
     private boolean valido(){
         try{
             LocalDate selectedDate = fechaPck.getDate();
@@ -1044,6 +1089,8 @@ public class Dashboard extends javax.swing.JFrame {
         porcentajeCmb.setEnabled(mostrar);
         porcentajeLbl.setEnabled(mostrar);
     }
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -1103,7 +1150,6 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JRadioButton impuestoBtn;
     private javax.swing.JButton ingresarBtn;
     private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1151,6 +1197,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JMenu salirJMn;
     private raven.datetime.component.date.SingleDate singleDate1;
     private javax.swing.JMenu temasJMn;
+    private javax.swing.JComboBox<String> tipoBalanceCmb;
     private javax.swing.JPanel transaccionesJPn;
     // End of variables declaration//GEN-END:variables
 
