@@ -15,8 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
@@ -49,6 +47,8 @@ public class Dashboard extends javax.swing.JFrame {
         }
         initComponents();
         setLocationRelativeTo(null);
+        menuJTb.setEnabledAt(5,false);
+        estadosFinanicerosJMn.setEnabled(false);
         conn = connection;
         cargarDatosCuentas();
         actualizarDiarioTbl();
@@ -120,26 +120,26 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         mayorTbl = new javax.swing.JTable();
-        estadosJPn = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         costosJPn = new javax.swing.JPanel();
         catalogoJPn = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         cuentasTbl = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         agregarCuentaBtn = new javax.swing.JButton();
+        estadosJPn = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        balanceTbl = new javax.swing.JTable();
+        nuevoCicloBtn = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         barraJMn = new javax.swing.JMenuBar();
         archivoJMn = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem10 = new javax.swing.JMenuItem();
+        cierreContableJMn = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem9 = new javax.swing.JMenuItem();
+        estadosFinanicerosJMn = new javax.swing.JMenuItem();
         temasJMn = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -450,6 +450,7 @@ public class Dashboard extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        mayorTbl.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         jScrollPane5.setViewportView(mayorTbl);
         if (mayorTbl.getColumnModel().getColumnCount() > 0) {
             mayorTbl.getColumnModel().getColumn(0).setPreferredWidth(10);
@@ -479,62 +480,6 @@ public class Dashboard extends javax.swing.JFrame {
         );
 
         menuJTb.addTab("Libro Mayor", mayorJPn);
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Cuenta", "Comprobación Debe", "Comprobación Haber"
-            }
-        ));
-        jScrollPane4.setViewportView(jTable1);
-
-        jButton1.setText("Nuevo ciclo fiscal");
-
-        jButton2.setText("Estado de balance");
-
-        jButton4.setText("Imprimir");
-
-        jButton5.setText("Estado de resultado");
-
-        javax.swing.GroupLayout estadosJPnLayout = new javax.swing.GroupLayout(estadosJPn);
-        estadosJPn.setLayout(estadosJPnLayout);
-        estadosJPnLayout.setHorizontalGroup(
-            estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(estadosJPnLayout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4)
-                    .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(estadosJPnLayout.createSequentialGroup()
-                            .addComponent(jButton2)
-                            .addGap(267, 267, 267)
-                            .addComponent(jButton5)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1))
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 1064, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(54, Short.MAX_VALUE))
-        );
-        estadosJPnLayout.setVerticalGroup(
-            estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(estadosJPnLayout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton5))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addComponent(jButton4)
-                .addGap(68, 68, 68))
-        );
-
-        menuJTb.addTab("Estados Financieros", estadosJPn);
 
         javax.swing.GroupLayout costosJPnLayout = new javax.swing.GroupLayout(costosJPn);
         costosJPn.setLayout(costosJPnLayout);
@@ -600,6 +545,74 @@ public class Dashboard extends javax.swing.JFrame {
 
         menuJTb.addTab("Cátalogo de cuentas", catalogoJPn);
 
+        balanceTbl.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Cuenta", "Debe", "Haber"
+            }
+        ));
+        balanceTbl.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        jScrollPane4.setViewportView(balanceTbl);
+
+        nuevoCicloBtn.setText("Nuevo ciclo fiscal");
+        nuevoCicloBtn.setEnabled(false);
+        nuevoCicloBtn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        nuevoCicloBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoCicloBtnActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Imprimir");
+
+        jLabel4.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        jLabel4.setText("Seleccionar tipo de balance");
+
+        jComboBox1.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Balance de comprobación", "Estado de resultado", "Balance general" }));
+
+        javax.swing.GroupLayout estadosJPnLayout = new javax.swing.GroupLayout(estadosJPn);
+        estadosJPn.setLayout(estadosJPnLayout);
+        estadosJPnLayout.setHorizontalGroup(
+            estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(estadosJPnLayout.createSequentialGroup()
+                .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(estadosJPnLayout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton4)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 1064, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(estadosJPnLayout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(nuevoCicloBtn)))
+                .addContainerGap(54, Short.MAX_VALUE))
+        );
+        estadosJPnLayout.setVerticalGroup(
+            estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(estadosJPnLayout.createSequentialGroup()
+                .addGap(69, 69, 69)
+                .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nuevoCicloBtn)
+                    .addComponent(jLabel4)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(jButton4)
+                .addGap(68, 68, 68))
+        );
+
+        menuJTb.addTab("Balances", estadosJPn);
+
         primerPanel.add(menuJTb, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1170, 800));
         menuJTb.getAccessibleContext().setAccessibleName("pestanas");
 
@@ -613,14 +626,19 @@ public class Dashboard extends javax.swing.JFrame {
         archivoJMn.add(jMenuItem8);
         archivoJMn.add(jSeparator4);
 
-        jMenuItem10.setText("Realizar Cierre Contable");
-        jMenuItem10.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
-        archivoJMn.add(jMenuItem10);
+        cierreContableJMn.setText("Realizar Cierre Contable");
+        cierreContableJMn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        cierreContableJMn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cierreContableJMnActionPerformed(evt);
+            }
+        });
+        archivoJMn.add(cierreContableJMn);
         archivoJMn.add(jSeparator5);
 
-        jMenuItem9.setText("Generar Estados Financieros");
-        jMenuItem9.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
-        archivoJMn.add(jMenuItem9);
+        estadosFinanicerosJMn.setText("Generar Estados Financieros");
+        estadosFinanicerosJMn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        archivoJMn.add(estadosFinanicerosJMn);
 
         barraJMn.add(archivoJMn);
 
@@ -727,6 +745,22 @@ public class Dashboard extends javax.swing.JFrame {
             cuentaCmb.setSelectedIndex(0);
         }
     }//GEN-LAST:event_ingresarBtnActionPerformed
+
+    private void cierreContableJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cierreContableJMnActionPerformed
+        mostrarMenusCierre(true, 5);
+    }//GEN-LAST:event_cierreContableJMnActionPerformed
+
+    private void nuevoCicloBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoCicloBtnActionPerformed
+        mostrarMenusCierre(false, 0);
+    }//GEN-LAST:event_nuevoCicloBtnActionPerformed
+    private void mostrarMenusCierre(boolean cierreNuevo, int indice){
+        nuevoCicloBtn.setEnabled(cierreNuevo);
+        cierreContableJMn.setEnabled(!cierreNuevo);
+        menuJTb.setEnabledAt(0,!cierreNuevo);
+        menuJTb.setSelectedIndex(indice);
+        menuJTb.setEnabledAt(5,cierreNuevo);
+        agregarCuentaBtn.setEnabled(!cierreNuevo);
+    }
     private boolean valido(){
         try{
             LocalDate selectedDate = fechaPck.getDate();
@@ -1049,8 +1083,10 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JButton agregarCuentaBtn;
     private javax.swing.JMenu archivoJMn;
     private javax.swing.JMenu ayudaJMn;
+    private javax.swing.JTable balanceTbl;
     private javax.swing.JMenuBar barraJMn;
     private javax.swing.JPanel catalogoJPn;
+    private javax.swing.JMenuItem cierreContableJMn;
     private javax.swing.JPanel costosJPn;
     private javax.swing.JComboBox<String> cuentaCmb;
     private javax.swing.JFormattedTextField cuentaDebeTxt;
@@ -1061,14 +1097,13 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField descuentoTxt;
     private javax.swing.JPanel diarioJPn;
     private javax.swing.JTable diarioTbl;
+    private javax.swing.JMenuItem estadosFinanicerosJMn;
     private javax.swing.JPanel estadosJPn;
     private com.github.lgooddatepicker.components.DatePicker fechaPck;
     private javax.swing.JRadioButton impuestoBtn;
     private javax.swing.JButton ingresarBtn;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1077,6 +1112,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1084,7 +1120,6 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -1092,7 +1127,6 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1104,11 +1138,11 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
-    private javax.swing.JTable jTable1;
     private javax.swing.JPanel mayorJPn;
     private javax.swing.JTable mayorTbl;
     private javax.swing.JTabbedPane menuJTb;
     private javax.swing.JFormattedTextField montoTxt;
+    private javax.swing.JButton nuevoCicloBtn;
     private javax.swing.JSpinner numSpn;
     private javax.swing.JComboBox<String> porcentajeCmb;
     private javax.swing.JLabel porcentajeLbl;
