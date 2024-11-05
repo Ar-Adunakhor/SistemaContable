@@ -794,6 +794,7 @@ public class Dashboard extends javax.swing.JFrame {
             fechaPck.setDate(null);
             porcentajeCmb.setSelectedIndex(0);
             cuentaCmb.setSelectedIndex(0);
+            mostrarImpuestos(impuestoBtn.isSelected());
         }
     }//GEN-LAST:event_ingresarBtnActionPerformed
 
@@ -819,11 +820,11 @@ public class Dashboard extends javax.swing.JFrame {
                 double debe = rs.getDouble("debe");
                 double haber = rs.getDouble("haber");
 
-                if (naturaleza == 1) {
+                if (naturaleza == 0) {
                     debe += saldoInicial;
                     debe = debe - haber;
                     haber = 0;
-                } else if (naturaleza == 0) {
+                } else if (naturaleza == 1) {
                     haber += saldoInicial;
                     haber = haber - debe;
                     debe = 0;
@@ -841,10 +842,70 @@ public class Dashboard extends javax.swing.JFrame {
 
             rs.close();
             stmt.close();
+            definirCuenta611();
         } catch (SQLException e) {
             enviarError("No se pudo saldar cuentas");
         }
     }
+    private void definirCuenta611() {
+        try {
+            // Calcular la suma de 'haber' menos la suma de 'debe' de las cuentas que están en el estado de resultados (tipo_balance = 0)
+            String sql = "UPDATE sistemacontable.cuentas "
+                       + "SET haber = ("
+                       + "    SELECT SUM(haber) - SUM(debe) "
+                       + "    FROM sistemacontable.cuentas "
+                       + "    WHERE tipo_balance = 0"
+                       + ") "
+                       + "WHERE codigo = 611";
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            int rowsUpdated = stmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("La cuenta 611 se actualizó exitosamente.");
+            } else {
+                System.out.println("No se actualizó la cuenta 611.");
+            }
+
+            stmt.close();
+            definirUtilidad();
+        } catch (SQLException e) {
+            enviarError("Error al definir cuenta 611");
+        }
+    }
+    
+    private void definirUtilidad() {
+        String selectSql = "SELECT haber FROM sistemacontable.cuentas WHERE codigo = ?";
+        String updateSql = "UPDATE sistemacontable.cuentas SET haber = haber + ? WHERE codigo = ?";
+
+        try (PreparedStatement selectStmt = conn.prepareStatement(selectSql);
+             PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+
+            // Obtener el valor de 'haber' de la cuenta 611
+            selectStmt.setInt(1, 611);
+            ResultSet rs611 = selectStmt.executeQuery();
+            double haber611 = rs611.next() ? rs611.getDouble("haber") : 0;
+            rs611.close();
+
+            // Obtener el valor de 'haber' de la cuenta 311
+            selectStmt.setInt(1, 311);
+            ResultSet rs311 = selectStmt.executeQuery();
+            double haber311 = rs311.next() ? rs311.getDouble("haber") : 0;
+            rs311.close();
+
+            // Calcular la suma de los valores 'haber' de las cuentas 611 y 311
+            double totalHaber = haber611 + haber311;
+
+            // Actualizar el valor de 'haber' de la cuenta 321 sumándole el total calculado
+            updateStmt.setDouble(1, totalHaber);
+            updateStmt.setInt(2, 321);
+            updateStmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void nuevoCicloBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoCicloBtnActionPerformed
         mostrarMenusCierre(false, 0);
         menuJTb.setEnabledAt(6,false);
@@ -866,12 +927,12 @@ public class Dashboard extends javax.swing.JFrame {
                 double haber = rs.getDouble("haber");
                 double saldoInicial = 0;
 
-                if (naturaleza == 1) {
-                    // Si es acreedora (naturaleza = 1), pasamos el valor de 'debe' a 'saldo_inicial'
+                if (naturaleza == 0) {
+                    // Si es acreedora (naturaleza = 0), pasamos el valor de 'debe' a 'saldo_inicial'
                     saldoInicial = debe;
                     debe = 0; // Dejar el campo 'debe' en 0
-                } else if (naturaleza == 0) {
-                    // Si es deudora (naturaleza = 0), pasamos el valor de 'haber' a 'saldo_inicial'
+                } else if (naturaleza == 1) {
+                    // Si es deudora (naturaleza = 1), pasamos el valor de 'haber' a 'saldo_inicial'
                     saldoInicial = haber;
                     haber = 0; // Dejar el campo 'haber' en 0
                 }
@@ -889,10 +950,29 @@ public class Dashboard extends javax.swing.JFrame {
 
             rs.close();
             stmt.close();
+            borrarUtilidadLiquidez();
         } catch (SQLException e) {
-            e.printStackTrace();
+            enviarError("Error al realizar nuevo ciclo contable");
         }
     }
+    
+    private void borrarUtilidadLiquidez() {
+        String sql = "UPDATE sistemacontable.cuentas SET saldo_inicial = 0, debe = 0, haber = 0 WHERE codigo = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            // Establecer los valores de la cuenta 321 a 0
+            stmt.setInt(1, 321);
+            stmt.executeUpdate();
+
+            // Establecer los valores de la cuenta 611 a 0
+            stmt.setInt(1, 611);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            enviarError("Error al borrar cuentas 611 y 321");
+        }
+    }
+
     private void estadosFinanicerosJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadosFinanicerosJMnActionPerformed
         menuJTb.setEnabledAt(6,true);
         estadosFinanicerosJMn.setEnabled(false);
