@@ -137,7 +137,13 @@ public class Dashboard extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         tipoBalanceCmb = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
         estadosFinanJPn = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        analiticoTbl = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
         barraJMn = new javax.swing.JMenuBar();
         sistemaJMn = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
@@ -407,8 +413,8 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel10.setText("Registro de Transacciones");
         jLabel10.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
 
-        legacyDiarioBtn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         legacyDiarioBtn.setText("Mostrar legacy");
+        legacyDiarioBtn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         legacyDiarioBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 legacyDiarioBtnActionPerformed(evt);
@@ -596,45 +602,54 @@ public class Dashboard extends javax.swing.JFrame {
         jButton4.setText("Imprimir");
         jButton4.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         jLabel4.setText("Seleccionar tipo de balance");
+        jLabel4.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
-        tipoBalanceCmb.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         tipoBalanceCmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Balance de comprobación", "Estado de resultado", "Balance general" }));
+        tipoBalanceCmb.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setText("Balances de cuentas EDC Solutions");
+        jLabel15.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
 
         javax.swing.GroupLayout estadosJPnLayout = new javax.swing.GroupLayout(estadosJPn);
         estadosJPn.setLayout(estadosJPnLayout);
         estadosJPnLayout.setHorizontalGroup(
             estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(estadosJPnLayout.createSequentialGroup()
-                .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(estadosJPnLayout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton4)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 1064, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(estadosJPnLayout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addComponent(tipoBalanceCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(nuevoCicloBtn)))
-                .addContainerGap(54, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, estadosJPnLayout.createSequentialGroup()
+                .addContainerGap(56, Short.MAX_VALUE)
+                .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 1064, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(estadosJPnLayout.createSequentialGroup()
+                            .addGap(8, 8, 8)
+                            .addComponent(jLabel4)
+                            .addGap(18, 18, 18)
+                            .addComponent(tipoBalanceCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nuevoCicloBtn)))
+                    .addComponent(jButton4))
+                .addGap(50, 50, 50))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, estadosJPnLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 1158, Short.MAX_VALUE)
+                .addContainerGap())
         );
         estadosJPnLayout.setVerticalGroup(
             estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(estadosJPnLayout.createSequentialGroup()
-                .addGap(69, 69, 69)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, estadosJPnLayout.createSequentialGroup()
+                .addContainerGap(24, Short.MAX_VALUE)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(estadosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nuevoCicloBtn)
                     .addComponent(jLabel4)
                     .addComponent(tipoBalanceCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGap(34, 34, 34)
                 .addComponent(jButton4)
-                .addGap(68, 68, 68))
+                .addGap(17, 17, 17))
         );
 
         tipoBalanceCmb.addActionListener(new ActionListener() {
@@ -646,15 +661,75 @@ public class Dashboard extends javax.swing.JFrame {
 
         menuJTb.addTab("Balances", estadosJPn);
 
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("Método análitico");
+        jLabel16.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
+
+        jLabel17.setFont(new java.awt.Font("JetBrains Mono", 0, 14)); // NOI18N
+        jLabel17.setText("*La empresa no cuenta con inventario por lo tanto se han omitido las operaciones que lo contienen");
+
+        analiticoTbl.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        analiticoTbl.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Signo", "Código", "Nombre", "Cantidad"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane6.setViewportView(analiticoTbl);
+
+        jButton1.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        jButton1.setText("Imprimir");
+
         javax.swing.GroupLayout estadosFinanJPnLayout = new javax.swing.GroupLayout(estadosFinanJPn);
         estadosFinanJPn.setLayout(estadosFinanJPnLayout);
         estadosFinanJPnLayout.setHorizontalGroup(
             estadosFinanJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1170, Short.MAX_VALUE)
+            .addGroup(estadosFinanJPnLayout.createSequentialGroup()
+                .addGroup(estadosFinanJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, estadosFinanJPnLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, 1158, Short.MAX_VALUE))
+                    .addGroup(estadosFinanJPnLayout.createSequentialGroup()
+                        .addGroup(estadosFinanJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(estadosFinanJPnLayout.createSequentialGroup()
+                                .addGap(57, 57, 57)
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1))
+                            .addGroup(estadosFinanJPnLayout.createSequentialGroup()
+                                .addGap(48, 48, 48)
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 1081, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         estadosFinanJPnLayout.setVerticalGroup(
             estadosFinanJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 756, Short.MAX_VALUE)
+            .addGroup(estadosFinanJPnLayout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGroup(estadosFinanJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, estadosFinanJPnLayout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addGap(56, 56, 56))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, estadosFinanJPnLayout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(26, 26, 26))))
         );
 
         menuJTb.addTab("Estados Financieros", estadosFinanJPn);
@@ -902,7 +977,7 @@ public class Dashboard extends javax.swing.JFrame {
             updateStmt.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            enviarError("No se pudo calcular la utilidad");
         }
     }
 
@@ -911,6 +986,8 @@ public class Dashboard extends javax.swing.JFrame {
         menuJTb.setEnabledAt(6,false);
         nuevosSaldosIniciales();
         cargarLibroMayor();
+        nuevoCicloBtn.setEnabled(false);
+        establecerNumeroTransaccion();
     }//GEN-LAST:event_nuevoCicloBtnActionPerformed
 
     private void nuevosSaldosIniciales() {
@@ -976,8 +1053,89 @@ public class Dashboard extends javax.swing.JFrame {
     private void estadosFinanicerosJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadosFinanicerosJMnActionPerformed
         menuJTb.setEnabledAt(6,true);
         estadosFinanicerosJMn.setEnabled(false);
+        saldarCuentasEstadoFinancieros();
+        mostrarTablaAnalitico();
+        nuevoCicloBtn.setEnabled(true);
     }//GEN-LAST:event_estadosFinanicerosJMnActionPerformed
 
+    private void saldarCuentasEstadoFinancieros() {
+        String queryCuentas = "SELECT codigo, debe, haber, naturaleza FROM sistemacontable.cuentas WHERE codigo IN (SELECT codigo FROM sistemacontable.analitico WHERE codigo IS NOT NULL)";
+        String updateAnalitico = "UPDATE sistemacontable.analitico SET cantidad = ? WHERE codigo = ?";
+        String updateCuentas = "UPDATE sistemacontable.cuentas SET debe = 0, haber = 0 WHERE codigo = ?";
+
+        try (PreparedStatement stmtCuentas = conn.prepareStatement(queryCuentas);
+             PreparedStatement stmtAnalitico = conn.prepareStatement(updateAnalitico);
+             PreparedStatement stmtUpdateCuentas = conn.prepareStatement(updateCuentas);
+             ResultSet rs = stmtCuentas.executeQuery()) {
+
+            while (rs.next()) {
+                int codigo = rs.getInt("codigo");
+                BigDecimal debe = rs.getBigDecimal("debe");
+                BigDecimal haber = rs.getBigDecimal("haber");
+                int naturaleza = rs.getInt("naturaleza");
+
+                // Determinar el saldo basado en la naturaleza
+                BigDecimal saldo = (naturaleza == 0) ? debe : haber;
+
+                // Actualizar el saldo en la tabla analitico
+                stmtAnalitico.setBigDecimal(1, saldo);
+                stmtAnalitico.setInt(2, codigo);
+                stmtAnalitico.executeUpdate();
+
+                // Poner a cero debe o haber en la tabla cuentas
+                stmtUpdateCuentas.setInt(1, codigo);
+                stmtUpdateCuentas.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            enviarError("No se pudo generar estado financiero");
+        }
+    }
+    
+    private void mostrarTablaAnalitico() {
+        String queryAnalitico = "SELECT signo, codigo, nombre, cantidad FROM sistemacontable.analitico ORDER BY orden";
+
+        try (PreparedStatement stmt = conn.prepareStatement(queryAnalitico);
+             ResultSet rs = stmt.executeQuery()) {
+
+            DefaultTableModel model = (DefaultTableModel) analiticoTbl.getModel();
+            model.setRowCount(0); // Limpiar la tabla antes de llenarla
+
+            while (rs.next()) {
+                // Leer los valores de la fila
+                int signo = rs.getInt("signo");
+                Integer codigo = rs.getInt("codigo"); // Esto puede ser nulo, maneja según sea necesario
+                String nombre = rs.getString("nombre");
+                BigDecimal cantidad = rs.getBigDecimal("cantidad");
+
+                // Transformar el signo
+                String signoTransformado = "";
+                switch (signo) {
+                    case 0:
+                        signoTransformado = ""; // Sin signo
+                        break;
+                    case 1:
+                        signoTransformado = "-"; // Menos
+                        break;
+                    case -1:
+                        signoTransformado = "="; // Igual
+                        break;
+                    case 2:
+                        signoTransformado = "+"; // Más
+                        break;
+                    default:
+                        break;
+                }
+
+                // Agregar la fila al modelo de la tabla
+                model.addRow(new Object[]{signoTransformado, codigo, nombre, cantidad});
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Manejo de errores
+        }
+    }
     private void legacyDiarioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_legacyDiarioBtnActionPerformed
         if (legacyDiarioBtn.isSelected()) {
             actualizarDiarioTblLegacy();
@@ -986,7 +1144,6 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_legacyDiarioBtnActionPerformed
     private void mostrarMenusCierre(boolean cierreNuevo, int indice){
-        nuevoCicloBtn.setEnabled(cierreNuevo);
         cierreContableJMn.setEnabled(!cierreNuevo);
         menuJTb.setEnabledAt(0,!cierreNuevo);
         menuJTb.setSelectedIndex(indice);
@@ -1389,6 +1546,7 @@ public class Dashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarCuentaBtn;
+    private javax.swing.JTable analiticoTbl;
     private javax.swing.JMenu ayudaJMn;
     private javax.swing.JTable balanceTbl;
     private javax.swing.JMenuBar barraJMn;
@@ -1410,6 +1568,7 @@ public class Dashboard extends javax.swing.JFrame {
     private com.github.lgooddatepicker.components.DatePicker fechaPck;
     private javax.swing.JRadioButton impuestoBtn;
     private javax.swing.JButton ingresarBtn;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1417,6 +1576,9 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1440,6 +1602,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
