@@ -515,7 +515,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGap(0, 756, Short.MAX_VALUE)
         );
 
-        menuJTb.addTab("Costos", costosJPn);
+        menuJTb.addTab("Costeo", costosJPn);
 
         cuentasTbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1086,12 +1086,75 @@ public class Dashboard extends javax.swing.JFrame {
                 stmtUpdateCuentas.setInt(1, codigo);
                 stmtUpdateCuentas.executeUpdate();
             }
+            formulaEstadosFinancieros();
 
         } catch (SQLException e) {
             enviarError("No se pudo generar estado financiero");
         }
     }
     
+    private void formulaEstadosFinancieros() {
+        try {
+            // Preparar las consultas para obtener valores necesarios
+            PreparedStatement stmtVentasTotales = conn.prepareStatement("SELECT cantidad FROM sistemacontable.analitico WHERE nombre = 'Ventas totales'");
+            PreparedStatement stmtDevolucionesVentas = conn.prepareStatement("SELECT cantidad FROM sistemacontable.analitico WHERE nombre = 'Devoluciones sobre ventas'");
+            PreparedStatement stmtRebajasVentas = conn.prepareStatement("SELECT cantidad FROM sistemacontable.analitico WHERE nombre = 'Rebajas sobre ventas'");
+
+            PreparedStatement stmtCompras = conn.prepareStatement("SELECT cantidad FROM sistemacontable.analitico WHERE nombre = 'Compras'");
+            PreparedStatement stmtGastosCompras = conn.prepareStatement("SELECT cantidad FROM sistemacontable.analitico WHERE nombre = 'Gastos sobre compras'");
+
+            PreparedStatement stmtDevolucionesCompras = conn.prepareStatement("SELECT cantidad FROM sistemacontable.analitico WHERE nombre = 'Devoluciones sobre compras'");
+            PreparedStatement stmtRebajasCompras = conn.prepareStatement("SELECT cantidad FROM sistemacontable.analitico WHERE nombre = 'Rebajas sobre compras'");
+
+            // Ejecutar consultas y obtener los valores de las cuentas
+            BigDecimal ventasTotales = executeSingleValueQuery(stmtVentasTotales);
+            BigDecimal devolucionesVentas = executeSingleValueQuery(stmtDevolucionesVentas);
+            BigDecimal rebajasVentas = executeSingleValueQuery(stmtRebajasVentas);
+
+            BigDecimal compras = executeSingleValueQuery(stmtCompras);
+            BigDecimal gastosCompras = executeSingleValueQuery(stmtGastosCompras);
+
+            BigDecimal devolucionesCompras = executeSingleValueQuery(stmtDevolucionesCompras);
+            BigDecimal rebajasCompras = executeSingleValueQuery(stmtRebajasCompras);
+
+            // Calcular Ventas netas
+            BigDecimal ventasNetas = ventasTotales.subtract(devolucionesVentas.add(rebajasVentas));
+
+            // Calcular Compras totales
+            BigDecimal comprasTotales = compras.add(gastosCompras);
+
+            // Calcular Compras netas
+            BigDecimal comprasNetas = comprasTotales.subtract(devolucionesCompras.add(rebajasCompras));
+
+            // Actualizar los resultados en la tabla analitico solo para Ventas netas, Compras totales y Compras netas
+            updateCantidadInAnalitico("Ventas netas", ventasNetas);
+            updateCantidadInAnalitico("Compras totales", comprasTotales);
+            updateCantidadInAnalitico("Compras netas", comprasNetas);
+
+            System.out.println("Fórmulas aplicadas y valores actualizados exitosamente.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error al calcular las fórmulas del estado financiero.");
+        }
+    }
+
+    // Método auxiliar para ejecutar consultas que devuelven un solo valor
+    private BigDecimal executeSingleValueQuery(PreparedStatement stmt) throws SQLException {
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getBigDecimal("cantidad");
+        }
+        return BigDecimal.ZERO; // Si no se encuentra la cuenta, retornar 0
+    }
+
+    // Método auxiliar para actualizar el valor en la tabla analitico
+    private void updateCantidadInAnalitico(String nombreCuenta, BigDecimal cantidad) throws SQLException {
+        PreparedStatement stmtUpdate = conn.prepareStatement("UPDATE sistemacontable.analitico SET cantidad = ? WHERE nombre = ?");
+        stmtUpdate.setBigDecimal(1, cantidad);
+        stmtUpdate.setString(2, nombreCuenta);
+        stmtUpdate.executeUpdate();
+        stmtUpdate.close();
+    }
     private void mostrarTablaAnalitico() {
         String queryAnalitico = "SELECT signo, codigo, nombre, cantidad FROM sistemacontable.analitico ORDER BY orden";
 

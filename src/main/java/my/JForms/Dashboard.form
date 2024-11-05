@@ -886,8 +886,8 @@
             <Container class="javax.swing.JPanel" name="costosJPn">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Costos">
-                    <Property name="tabTitle" type="java.lang.String" value="Costos"/>
+                  <JTabbedPaneConstraints tabName="Costeo">
+                    <Property name="tabTitle" type="java.lang.String" value="Costeo"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -1250,10 +1250,10 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel17">
                   <Properties>
+                    <Property name="text" type="java.lang.String" value="*La empresa no cuenta con inventario por lo tanto se han omitido las operaciones que lo contienen"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="JetBrains Mono" size="14" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="*La empresa no cuenta con inventario por lo tanto se han omitido las operaciones que lo contienen"/>
                   </Properties>
                 </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane6">
@@ -1309,10 +1309,10 @@
                 </Container>
                 <Component class="javax.swing.JButton" name="jButton1">
                   <Properties>
+                    <Property name="text" type="java.lang.String" value="Imprimir"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="JetBrains Mono" size="17" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Imprimir"/>
                   </Properties>
                 </Component>
               </SubComponents>
