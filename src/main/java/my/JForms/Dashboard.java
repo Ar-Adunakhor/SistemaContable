@@ -58,6 +58,7 @@ public class Dashboard extends javax.swing.JFrame {
         cargarLibroMayor();
         mostrarTablaPuestos();
         establecerNumeroTransaccion();
+        mostrarTablaResumenCosteo();
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -128,7 +129,7 @@ public class Dashboard extends javax.swing.JFrame {
         costosJPn = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
-        benificioPorcentajeTxt = new javax.swing.JFormattedTextField();
+        beneficioPorcentajeTxt = new javax.swing.JFormattedTextField();
         calcularCostoBtn = new javax.swing.JButton();
         categoriasCosteoJTb = new javax.swing.JTabbedPane();
         personalJPn = new javax.swing.JPanel();
@@ -563,12 +564,13 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel18.setText("Método por Orden de Producción");
         jLabel18.setFont(new java.awt.Font("JetBrains Mono", 0, 24)); // NOI18N
 
-        jLabel24.setText("Porcentaje de benificio:");
+        jLabel24.setText("Porcentaje de beneficio:");
         jLabel24.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
-        benificioPorcentajeTxt.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        benificioPorcentajeTxt.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
-        benificioPorcentajeTxt.setToolTipText("Ingrese el porcentaje no el decimal");
+        beneficioPorcentajeTxt.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        beneficioPorcentajeTxt.setText("0.00");
+        beneficioPorcentajeTxt.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        beneficioPorcentajeTxt.setToolTipText("Ingrese el porcentaje no el decimal");
 
         calcularCostoBtn.setText("Calcular costeo");
         calcularCostoBtn.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
@@ -861,7 +863,7 @@ public class Dashboard extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "Costo", "Precio", "Nombre"
+                "Signo", "Nombre", "Precio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -935,8 +937,8 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(calcularCostoBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel24)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(benificioPorcentajeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(beneficioPorcentajeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, costosJPnLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -952,7 +954,7 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGroup(costosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(calcularCostoBtn)
                     .addComponent(jLabel24)
-                    .addComponent(benificioPorcentajeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(beneficioPorcentajeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(categoriasCosteoJTb, javax.swing.GroupLayout.PREFERRED_SIZE, 606, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(15, Short.MAX_VALUE))
@@ -1783,6 +1785,40 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_legacyDiarioBtnActionPerformed
 
+    public void mostrarTablaResumenCosteo() {
+        // Obtén el modelo de la tabla y limpia las filas actuales
+        DefaultTableModel model = (DefaultTableModel) resumenCosteoTbl.getModel();
+        model.setRowCount(0); // Limpia las filas actuales de la tabla, si hay alguna
+
+        String sql = "SELECT " +
+                     "CASE " +
+                     "WHEN signo = 0 THEN '' " +
+                     "WHEN signo = 1 THEN '+' " +
+                     "WHEN signo = 2 THEN '=' " +
+                     "END AS signo, " +
+                     "costo, " +
+                     "precio " +
+                     "FROM sistemacontable.costeo " +
+                     "ORDER BY id";
+
+        try (
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            // Recorre el ResultSet y añade cada fila al modelo de la tabla
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getString("signo"),     // Columna de signo ya formateada
+                    rs.getString("costo"),     // Columna de costo
+                    rs.getBigDecimal("precio") // Columna de precio
+                };
+                model.addRow(row);
+            }
+
+        } catch (SQLException e) {
+            enviarError("No se pudo cargar datos del resumen de coste");
+        }
+    }
     private void costeoJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_costeoJMnActionPerformed
         menuJTb.setSelectedIndex(3);
     }//GEN-LAST:event_costeoJMnActionPerformed
@@ -1799,6 +1835,36 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_nuevoPuestoBtnActionPerformed
 
+    private void moverATablaResumenPersonal(int meses) {
+        String selectPuestos = "SELECT id, categoria, salario_real FROM sistemacontable.puestos";
+        String updateCosteo = "UPDATE sistemacontable.costeo SET precio = precio + ? WHERE id = ?";
+
+        try (
+             PreparedStatement pstmtSelect = conn.prepareStatement(selectPuestos);
+             ResultSet rs = pstmtSelect.executeQuery()) {
+
+            // Procesamos cada fila de la tabla sistemacontable.puestos
+            while (rs.next()) {
+                int categoria = rs.getInt("categoria");
+                BigDecimal salarioReal = rs.getBigDecimal("salario_real");
+
+                // Multiplicamos el salario real por el número de meses
+                BigDecimal salarioConMeses = salarioReal.multiply(BigDecimal.valueOf(meses));
+
+                int idToUpdate = (categoria == 0) ? 1 : 4; // id=1 si es categoría 0, id=4 si es categoría 1
+
+                // Ejecutamos la actualización en la tabla sistemacontable.costeo
+                try (PreparedStatement pstmtUpdateCosteo = conn.prepareStatement(updateCosteo)) {
+                    pstmtUpdateCosteo.setBigDecimal(1, salarioConMeses); // Usamos salario multiplicado por meses
+                    pstmtUpdateCosteo.setInt(2, idToUpdate);
+                    pstmtUpdateCosteo.executeUpdate();
+                }
+            }
+
+        } catch (SQLException e) {
+            enviarError("Error al enviar a la tabla resumen");
+        }
+    }
     private void borrarPersonal(){
         puestoTxt.setText("");
         salarioTxt.setText("");
@@ -1811,7 +1877,7 @@ public class Dashboard extends javax.swing.JFrame {
     private boolean validarPersonal(){
         return true;
     }
-        public void actualizarTablaPuestos() {
+    public void actualizarTablaPuestos() {
         // Suponiendo que tienes los siguientes campos de texto en tu interfaz
         String puesto = puestoTxt.getText(); // JTextField para el puesto
         BigDecimal salarioNominal = new BigDecimal(salarioTxt.getText()); // JTextField para salario nominal
@@ -1902,12 +1968,15 @@ public class Dashboard extends javax.swing.JFrame {
 
             // Recorre el ResultSet y añade cada fila al modelo de la tabla
             while (rs.next()) {
+                // Convertimos el valor de categoria a su representación textual
+                String categoria = rs.getInt("categoria") == 1 ? "Administrativo" : "Mano de obra directa";
+
                 Object[] row = {
                     rs.getString("puesto"),
                     rs.getBigDecimal("salario_nominal"),
                     rs.getInt("cantidad_trabajadores"),
                     rs.getInt("horas_trabajadas"),
-                    rs.getInt("categoria"),
+                    categoria, // Columna categoría formateada
                     rs.getBigDecimal("prestaciones"),
                     rs.getBigDecimal("salario_real")
                 };
@@ -1915,7 +1984,7 @@ public class Dashboard extends javax.swing.JFrame {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            enviarError("No se pudo mostrar tabla de puestos");
         }
     }
     private void agregarCostoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarCostoBtnActionPerformed
@@ -1923,8 +1992,134 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_agregarCostoBtnActionPerformed
 
     private void calcularCostoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcularCostoBtnActionPerformed
-        // TODO add your handling code here:
+        dejarACeroCosteo();
+        int meses = Integer.parseInt(mesesTrabajoSpn.getValue().toString());
+        moverATablaResumenPersonal(meses);
+        //moverATableResumenCostos(meses);
+        sumarCosteo();
+        mostrarTablaResumenCosteo();
+        
     }//GEN-LAST:event_calcularCostoBtnActionPerformed
+    private void dejarACeroCosteo() {
+        String updateCosteo = "UPDATE sistemacontable.costeo SET precio = 0";
+
+        try (
+            PreparedStatement pstmtUpdate = conn.prepareStatement(updateCosteo)) {
+
+            // Ejecutar la actualización para poner a cero el valor de la columna precio
+            pstmtUpdate.executeUpdate();
+
+            // Llama al método para actualizar la vista de la tabla (si lo deseas)
+            mostrarTablaResumenCosteo();
+
+        } catch (SQLException e) {
+            enviarError("Error al actualizar los precios en la tabla costeo");
+        }
+    }
+    private void sumarCosteo() {
+        // La consulta ahora toma solo los 9 IDs fijos
+        String selectCosteo = "SELECT id, precio FROM sistemacontable.costeo WHERE id IN (1, 2, 3, 4, 5, 6, 7, 8, 9)";
+        String updateCosteo = "UPDATE sistemacontable.costeo SET precio = ? WHERE id = ?";
+
+        try (
+            PreparedStatement pstmtSelect = conn.prepareStatement(selectCosteo);
+            ResultSet rs = pstmtSelect.executeQuery()) {
+
+            // Array para almacenar los precios de los 9 IDs
+            BigDecimal[] precios = new BigDecimal[9];
+
+            // Procesamos los resultados y los almacenamos en el array
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                BigDecimal precio = rs.getBigDecimal("precio");
+                precios[id - 1] = precio;  // Los IDs empiezan en 1, pero el array empieza en 0
+            }
+
+            // Calcular el precio de id 3 (3 = 2 + 1)
+            BigDecimal precio3 = precios[1].add(precios[0]);
+
+            // Actualizar el precio de id 3
+            try (PreparedStatement pstmtUpdate = conn.prepareStatement(updateCosteo)) {
+                pstmtUpdate.setBigDecimal(1, precio3.setScale(2, RoundingMode.HALF_UP));
+                pstmtUpdate.setInt(2, 3);
+                pstmtUpdate.executeUpdate();
+            }
+
+            // Calcular el precio de id 6 (6 = 3 + 4 + 5)
+            BigDecimal precio6 = precio3.add(precios[3]).add(precios[4]);
+            System.out.print(precios[2]);
+            System.out.print(precios[3]);
+            System.out.print(precios[4]);
+
+            // Actualizar el precio de id 6
+            try (PreparedStatement pstmtUpdate = conn.prepareStatement(updateCosteo)) {
+                pstmtUpdate.setBigDecimal(1, precio6.setScale(2, RoundingMode.HALF_UP));
+                pstmtUpdate.setInt(2, 6);
+                pstmtUpdate.executeUpdate();
+            }
+
+            // Obtener el valor del porcentaje y convertirlo a BigDecimal
+            BigDecimal beneficioPorcentaje = new BigDecimal(beneficioPorcentajeTxt.getText());
+
+            // Calcular el precio de id 7 (7 = precio de id 6 * (beneficioPorcentaje / 100))
+            BigDecimal precio7 = precio6.multiply(beneficioPorcentaje).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
+
+            // Actualizar el precio de id 7
+            try (PreparedStatement pstmtUpdate = conn.prepareStatement(updateCosteo)) {
+                pstmtUpdate.setBigDecimal(1, precio7.setScale(2, RoundingMode.HALF_UP));
+                pstmtUpdate.setInt(2, 7);
+                pstmtUpdate.executeUpdate();
+            }
+
+            // Calcular el precio de id 8 (8 = 6 + 7)
+            BigDecimal precio8 = precio6.add(precio7);
+
+            // Actualizar el precio de id 8
+            try (PreparedStatement pstmtUpdate = conn.prepareStatement(updateCosteo)) {
+                pstmtUpdate.setBigDecimal(1, precio8.setScale(2, RoundingMode.HALF_UP));
+                pstmtUpdate.setInt(2, 8);
+                pstmtUpdate.executeUpdate();
+            }
+
+            // Obtener el índice seleccionado en el combo box de frecuencia de venta
+            int frecuenciaVentaIndex = frecuenciaVentaCmb.getSelectedIndex();
+
+            // Calcular el precio de id 9 según la frecuencia seleccionada
+            BigDecimal precio9;
+
+            switch (frecuenciaVentaIndex) {
+                case 0: // "Una vez"
+                    // Si la frecuencia es "Una vez", el precio de id 9 es igual al precio de id 8
+                    precio9 = precio8;
+                    break;
+                case 1: // "Un año"
+                    // Si la frecuencia es "Un año", dividimos el precio de id 8 entre 12 meses
+                    precio9 = precio8.divide(new BigDecimal(12), 2, RoundingMode.HALF_UP);
+                    break;
+                case 2: // "Dos años"
+                    // Si la frecuencia es "Dos años", dividimos el precio de id 8 entre 24 meses
+                    precio9 = precio8.divide(new BigDecimal(24), 2, RoundingMode.HALF_UP);
+                    break;
+                case 3: // "Tres años"
+                    // Si la frecuencia es "Tres años", dividimos el precio de id 8 entre 36 meses
+                    precio9 = precio8.divide(new BigDecimal(36), 2, RoundingMode.HALF_UP);
+                    break;
+                default:
+                    // Si no se selecciona una opción válida, asumimos el valor de "Una vez"
+                    precio9 = precio8;
+            }
+
+            // Actualizar el precio de id 9
+            try (PreparedStatement pstmtUpdate = conn.prepareStatement(updateCosteo)) {
+                pstmtUpdate.setBigDecimal(1, precio9.setScale(2, RoundingMode.HALF_UP));
+                pstmtUpdate.setInt(2, 9);
+                pstmtUpdate.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     private void mostrarMenusCierre(boolean cierreNuevo, int indice){
         cierreContableJMn.setEnabled(!cierreNuevo);
         menuJTb.setEnabledAt(0,!cierreNuevo);
@@ -2335,7 +2530,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> balanceCmb;
     private javax.swing.JTable balanceTbl;
     private javax.swing.JMenuBar barraJMn;
-    private javax.swing.JFormattedTextField benificioPorcentajeTxt;
+    private javax.swing.JFormattedTextField beneficioPorcentajeTxt;
     private javax.swing.JButton calcularCostoBtn;
     private javax.swing.JSpinner cantidadTrabajadoresSpn;
     private javax.swing.JPanel catalogoJPn;
