@@ -27,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Dashboard extends javax.swing.JFrame {
     private Connection conn;
+    int meses = 0;
     /**
      * Creates new form Dashboard
      */
@@ -56,9 +57,14 @@ public class Dashboard extends javax.swing.JFrame {
         cargarDatosCuentas();
         actualizarDiarioTbl();
         cargarLibroMayor();
-        mostrarTablaPuestos();
+        
         establecerNumeroTransaccion();
+        
+        dejarACeroCosteo();
+        mostrarTablaPuestos();
         mostrarTablaResumenCosteo();
+        mostrarTablaCostos();
+        
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -152,6 +158,8 @@ public class Dashboard extends javax.swing.JFrame {
         nuevoPuestoBtn = new javax.swing.JButton();
         jScrollPane9 = new javax.swing.JScrollPane();
         personalTbl = new javax.swing.JTable();
+        jLabel36 = new javax.swing.JLabel();
+        cuentaAsociadaPuestoTxt = new javax.swing.JFormattedTextField();
         gastosCostosJPn = new javax.swing.JPanel();
         jLabel25 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
@@ -162,6 +170,8 @@ public class Dashboard extends javax.swing.JFrame {
         gastoNombreTxt = new javax.swing.JTextField();
         gastoMontoTxt = new javax.swing.JFormattedTextField();
         gastoCategoriaCmb = new javax.swing.JComboBox<>();
+        jLabel37 = new javax.swing.JLabel();
+        cuentaAsociadaGastosTxt = new javax.swing.JFormattedTextField();
         resumenJPn = new javax.swing.JPanel();
         jScrollPane8 = new javax.swing.JScrollPane();
         resumenCosteoTbl = new javax.swing.JTable();
@@ -647,17 +657,17 @@ public class Dashboard extends javax.swing.JFrame {
 
         personalTbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Puesto", "Salario nominal", "Cantidad de trabajadores", "Horas trabajadas", "Categoría", "Total prestaciones", "Salario real"
+                "Puesto", "Salario nominal", "Cantidad de trabajadores", "Horas trabajadas", "Categoría", "Total prestaciones", "Salario real", "Catalogo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -666,6 +676,11 @@ public class Dashboard extends javax.swing.JFrame {
         });
         personalTbl.setFont(new java.awt.Font("JetBrains Mono", 0, 14)); // NOI18N
         jScrollPane9.setViewportView(personalTbl);
+
+        jLabel36.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        jLabel36.setText("Cuenta en cátalago asociada");
+
+        cuentaAsociadaPuestoTxt.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
         javax.swing.GroupLayout personalJPnLayout = new javax.swing.GroupLayout(personalJPn);
         personalJPn.setLayout(personalJPnLayout);
@@ -705,27 +720,41 @@ public class Dashboard extends javax.swing.JFrame {
                         .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(personalJPnLayout.createSequentialGroup()
                                 .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBox2)
+                                    .addComponent(jCheckBox1))
+                                .addContainerGap(478, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, personalJPnLayout.createSequentialGroup()
+                                .addComponent(aguinaldoChk)
+                                .addGap(18, 18, 18)
+                                .addComponent(diasAguinaldoCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(personalJPnLayout.createSequentialGroup()
-                                        .addComponent(aguinaldoChk)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(diasAguinaldoCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(vacacionsChk)
-                                    .addComponent(jCheckBox2))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(nuevoPuestoBtn)
+                                        .addGap(84, 84, 84))
+                                    .addGroup(personalJPnLayout.createSequentialGroup()
+                                        .addGap(89, 89, 89)
+                                        .addComponent(cuentaAsociadaPuestoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(personalJPnLayout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 286, Short.MAX_VALUE)
-                                .addComponent(nuevoPuestoBtn)
-                                .addGap(84, 84, 84))))))
+                                .addComponent(vacacionsChk)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel36)
+                                .addGap(14, 14, 14))))))
         );
         personalJPnLayout.setVerticalGroup(
             personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(personalJPnLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel30)
-                    .addComponent(puestoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(vacacionsChk))
+                .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(personalJPnLayout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel30)
+                            .addComponent(puestoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(vacacionsChk)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, personalJPnLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel36)))
                 .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(personalJPnLayout.createSequentialGroup()
                         .addGap(9, 9, 9)
@@ -736,15 +765,15 @@ public class Dashboard extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(aguinaldoChk)
-                            .addComponent(diasAguinaldoCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(diasAguinaldoCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cuentaAsociadaPuestoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel33)
                     .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cantidadTrabajadoresSpn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel32)
-                        .addComponent(jCheckBox1)
-                        .addComponent(nuevoPuestoBtn)))
+                        .addComponent(jCheckBox1)))
                 .addGap(18, 18, 18)
                 .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel34)
@@ -753,7 +782,8 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(personalJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(categoriaPersonalCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel35))
+                    .addComponent(jLabel35)
+                    .addComponent(nuevoPuestoBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
@@ -780,17 +810,17 @@ public class Dashboard extends javax.swing.JFrame {
 
         gastosTbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Nombre", "Monto mensual", "Categoría"
+                "Nombre", "Monto mensual", "Categoría", "Catalogo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -808,6 +838,11 @@ public class Dashboard extends javax.swing.JFrame {
         gastoCategoriaCmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Costos directos de fabricación", "Gastos de comercialización" }));
         gastoCategoriaCmb.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
 
+        jLabel37.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+        jLabel37.setText("Cuenta en cátalago asociada:");
+
+        cuentaAsociadaGastosTxt.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
+
         javax.swing.GroupLayout gastosCostosJPnLayout = new javax.swing.GroupLayout(gastosCostosJPn);
         gastosCostosJPn.setLayout(gastosCostosJPnLayout);
         gastosCostosJPnLayout.setHorizontalGroup(
@@ -817,23 +852,28 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGroup(gastosCostosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane7)
                     .addGroup(gastosCostosJPnLayout.createSequentialGroup()
-                        .addComponent(jLabel25)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(gastoNombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel27)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(gastoMontoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(gastosCostosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(gastosCostosJPnLayout.createSequentialGroup()
+                                .addComponent(jLabel25)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(gastoNombreTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(45, 45, 45)
+                                .addComponent(jLabel27)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(gastoMontoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(gastosCostosJPnLayout.createSequentialGroup()
+                                .addComponent(jLabel37)
+                                .addGap(26, 26, 26)
+                                .addComponent(cuentaAsociadaGastosTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(59, 59, 59)
-                        .addComponent(jLabel26)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(gastoCategoriaCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(gastosCostosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(agregarCostoBtn)
+                            .addGroup(gastosCostosJPnLayout.createSequentialGroup()
+                                .addComponent(jLabel26)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(gastoCategoriaCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 40, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gastosCostosJPnLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(agregarCostoBtn)
-                .addGap(514, 514, 514))
         );
         gastosCostosJPnLayout.setVerticalGroup(
             gastosCostosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -847,7 +887,10 @@ public class Dashboard extends javax.swing.JFrame {
                     .addComponent(gastoMontoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(gastoCategoriaCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
-                .addComponent(agregarCostoBtn)
+                .addGroup(gastosCostosJPnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(agregarCostoBtn)
+                    .addComponent(jLabel37)
+                    .addComponent(cuentaAsociadaGastosTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(19, Short.MAX_VALUE))
@@ -1416,6 +1459,7 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_ingresarBtnActionPerformed
 
     private void cierreContableJMnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cierreContableJMnActionPerformed
+        enviarCostosACuentas();
         saldarCuentas();
         mostrarMenusCierre(true, 5);
         mostrarBalance("Balance de comprobación");
@@ -1423,6 +1467,9 @@ public class Dashboard extends javax.swing.JFrame {
         actualizarDiarioTbl();
     }//GEN-LAST:event_cierreContableJMnActionPerformed
 
+    private void enviarCostosACuentas(){
+        
+    }
     private void saldarCuentas() {
         try {
             // Consulta para obtener todas las cuentas
@@ -1835,7 +1882,7 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_nuevoPuestoBtnActionPerformed
 
-    private void moverATablaResumenPersonal(int meses) {
+    private void moverATablaResumenPersonal() {
         String selectPuestos = "SELECT id, categoria, salario_real FROM sistemacontable.puestos";
         String updateCosteo = "UPDATE sistemacontable.costeo SET precio = precio + ? WHERE id = ?";
 
@@ -1873,12 +1920,12 @@ public class Dashboard extends javax.swing.JFrame {
         categoriaPersonalCmb.setSelectedIndex(0);
         aguinaldoChk.setSelected(false);
         diasAguinaldoCmb.setEnabled(aguinaldoChk.isSelected());
+        cuentaAsociadaPuestoTxt.setText("");
     }
     private boolean validarPersonal(){
         return true;
     }
     public void actualizarTablaPuestos() {
-        // Suponiendo que tienes los siguientes campos de texto en tu interfaz
         String puesto = puestoTxt.getText(); // JTextField para el puesto
         BigDecimal salarioNominal = new BigDecimal(salarioTxt.getText()); // JTextField para salario nominal
         int cantidadTrabajadores = Integer.parseInt(cantidadTrabajadoresSpn.getValue().toString());
@@ -1893,11 +1940,12 @@ public class Dashboard extends javax.swing.JFrame {
             prestaciones = calcularPrestaciones(salarioNominal, -1);
         }
         BigDecimal salarioReal = salarioNominal.add(prestaciones).multiply(new BigDecimal(cantidadTrabajadores));
+        int catalogo = Integer.parseInt(cuentaAsociadaPuestoTxt.getText());
 
         // Cambiamos la consulta a INSERT en lugar de UPDATE
         String sql = "INSERT INTO sistemacontable.puestos (puesto, salario_nominal, cantidad_trabajadores, "
-                   + "horas_trabajadas, categoria, prestaciones, salario_real) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                   + "horas_trabajadas, categoria, prestaciones, salario_real, catalogo) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -1909,6 +1957,7 @@ public class Dashboard extends javax.swing.JFrame {
             pstmt.setInt(5, categoria);
             pstmt.setBigDecimal(6, prestaciones);
             pstmt.setBigDecimal(7, salarioReal);
+            pstmt.setInt(8, catalogo);
 
             // Ejecuta la consulta de inserción
             int rowsInserted = pstmt.executeUpdate();
@@ -1959,7 +2008,7 @@ public class Dashboard extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) personalTbl.getModel();
         model.setRowCount(0); // Limpia las filas actuales de la tabla, si hay alguna
 
-        String sql = "SELECT puesto, salario_nominal, cantidad_trabajadores, horas_trabajadas, categoria, prestaciones, salario_real "
+        String sql = "SELECT puesto, salario_nominal, cantidad_trabajadores, horas_trabajadas, categoria, prestaciones, salario_real, catalogo "
                    + "FROM sistemacontable.puestos ORDER BY id";
 
         try (
@@ -1978,7 +2027,8 @@ public class Dashboard extends javax.swing.JFrame {
                     rs.getInt("horas_trabajadas"),
                     categoria, // Columna categoría formateada
                     rs.getBigDecimal("prestaciones"),
-                    rs.getBigDecimal("salario_real")
+                    rs.getBigDecimal("salario_real"),
+                    rs.getInt("catalogo")
                 };
                 model.addRow(row);
             }
@@ -1988,14 +2038,110 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }
     private void agregarCostoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarCostoBtnActionPerformed
-        // TODO add your handling code here:
+        if(validarCostos()){
+            agregarATablaCostos();
+            mostrarTablaCostos();
+            gastoNombreTxt.setText("");
+            gastoMontoTxt.setText("");
+            gastoCategoriaCmb.setSelectedIndex(0);
+            cuentaAsociadaGastosTxt.setText("");
+        }
     }//GEN-LAST:event_agregarCostoBtnActionPerformed
 
+    private boolean validarCostos(){
+        return true;
+    }
+    private void agregarATablaCostos() {
+        // Obtener los valores de los campos de texto y el combo box
+        String nombre = gastoNombreTxt.getText();
+        BigDecimal monto = new BigDecimal(gastoMontoTxt.getText());  // Usar BigDecimal para el monto
+        int categoria = gastoCategoriaCmb.getSelectedIndex();  // Obtiene el índice seleccionado en el JComboBox
+        int catalogo = Integer.parseInt(cuentaAsociadaGastosTxt.getText());
+
+        // SQL para insertar en la base de datos
+        String query = "INSERT INTO sistemacontable.gastos (nombre, monto, categoria, catalogo) VALUES (?, ?, ?, ?)";
+
+        // Ejecutar la inserción en la base de datos
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, nombre);  // Establecer el nombre
+            pstmt.setBigDecimal(2, monto);   // Establecer el monto usando BigDecimal
+            pstmt.setInt(3, categoria);  // Establecer la categoría (índice del combo box)
+            pstmt.setInt(4, catalogo);
+
+            // Ejecutar la inserción
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            enviarError("Error al agregar el gasto a la base de datos.");
+        }
+    }
+
+
+   private void mostrarTablaCostos() {
+        // Definir la consulta SQL para obtener los datos de la tabla 'gastos' ordenados por 'id'
+        String query = "SELECT nombre, monto, categoria, catalogo FROM sistemacontable.gastos ORDER BY id";
+
+        // Limpiar los datos anteriores en la tabla
+        DefaultTableModel model = (DefaultTableModel) gastosTbl.getModel();
+        model.setRowCount(0);  // Elimina todas las filas actuales
+
+        // Ejecutar la consulta y obtener los resultados
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+
+            // Recorrer los resultados y agregar filas al modelo de la tabla
+            while (rs.next()) {
+                String nombre = rs.getString("nombre");
+                double monto = rs.getDouble("monto");
+                int categoria = rs.getInt("categoria");
+                String categoriaTexto = (categoria == 0) ? "Costos directos de fabricación" : "Gastos de comercialización";
+                int catalogo = rs.getInt("catalogo");
+
+                // Agregar la fila a la tabla
+                model.addRow(new Object[]{nombre, monto, categoriaTexto, catalogo});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void moverATableResumenCostos() {
+        // Consulta SELECT para obtener los datos de la tabla gastos
+        String selectGastos = "SELECT id, categoria, monto FROM sistemacontable.gastos";
+        String updateCosteo = "UPDATE sistemacontable.costeo SET precio = precio + ? WHERE id = ?";
+
+        try (
+            PreparedStatement pstmtSelect = conn.prepareStatement(selectGastos);
+            ResultSet rs = pstmtSelect.executeQuery()) {
+
+            // Procesamos cada fila de la tabla sistemacontable.gastos
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int categoria = rs.getInt("categoria");
+                BigDecimal monto = rs.getBigDecimal("monto");
+
+                // Multiplicamos el monto por el número de meses
+                BigDecimal montoConMeses = monto.multiply(BigDecimal.valueOf(meses));
+
+                // Determinamos el id para actualizar en la tabla costeo
+                int idToUpdate = (categoria == 0) ? 2 : 5; // id=1 si es categoría 0, id=4 si es categoría 1
+
+                // Ejecutamos la actualización en la tabla costeo
+                try (PreparedStatement pstmtUpdateCosteo = conn.prepareStatement(updateCosteo)) {
+                    pstmtUpdateCosteo.setBigDecimal(1, montoConMeses); // Usamos monto multiplicado por meses
+                    pstmtUpdateCosteo.setInt(2, idToUpdate);
+                    pstmtUpdateCosteo.executeUpdate();
+                }
+            }
+
+        } catch (SQLException e) {
+            enviarError("Error al enviar a la tabla resumen de costos");
+        }
+    }
     private void calcularCostoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcularCostoBtnActionPerformed
         dejarACeroCosteo();
-        int meses = Integer.parseInt(mesesTrabajoSpn.getValue().toString());
-        moverATablaResumenPersonal(meses);
-        //moverATableResumenCostos(meses);
+        meses = Integer.parseInt(mesesTrabajoSpn.getValue().toString());
+        moverATablaResumenPersonal();
+        moverATableResumenCostos();
         sumarCosteo();
         mostrarTablaResumenCosteo();
         
@@ -2047,9 +2193,6 @@ public class Dashboard extends javax.swing.JFrame {
 
             // Calcular el precio de id 6 (6 = 3 + 4 + 5)
             BigDecimal precio6 = precio3.add(precios[3]).add(precios[4]);
-            System.out.print(precios[2]);
-            System.out.print(precios[3]);
-            System.out.print(precios[4]);
 
             // Actualizar el precio de id 6
             try (PreparedStatement pstmtUpdate = conn.prepareStatement(updateCosteo)) {
@@ -2540,6 +2683,8 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JMenuItem cierreContableJMn;
     private javax.swing.JMenuItem costeoJMn;
     private javax.swing.JPanel costosJPn;
+    private javax.swing.JFormattedTextField cuentaAsociadaGastosTxt;
+    private javax.swing.JFormattedTextField cuentaAsociadaPuestoTxt;
     private javax.swing.JComboBox<String> cuentaCmb;
     private javax.swing.JFormattedTextField cuentaDebeTxt;
     private javax.swing.JFormattedTextField cuentaHaberTxt;
@@ -2597,6 +2742,8 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
