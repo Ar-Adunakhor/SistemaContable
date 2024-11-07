@@ -1613,31 +1613,37 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }
     private void definirCuenta611() {
-        try {
-            // Calcular la suma de 'haber' menos la suma de 'debe' de las cuentas que están en el estado de resultados (tipo_balance = 0)
-            String sql = "UPDATE sistemacontable.cuentas "
-                       + "SET haber = ("
-                       + "    SELECT SUM(haber) - SUM(debe) "
-                       + "    FROM sistemacontable.cuentas "
-                       + "    WHERE tipo_balance = 0"
-                       + ") "
-                       + "WHERE codigo = 611";
+    String calcularBalanceSql = "SELECT SUM(debe) - SUM(haber) AS balance FROM sistemacontable.cuentas WHERE tipo_balance = 0";
+    String actualizarCuenta611Sql = "UPDATE sistemacontable.cuentas SET haber = ? WHERE codigo = 611";
 
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            int rowsUpdated = stmt.executeUpdate();
+    try (
+        PreparedStatement calcularStmt = conn.prepareStatement(calcularBalanceSql);
+        ResultSet rs = calcularStmt.executeQuery()) {
 
-            if (rowsUpdated > 0) {
-                System.out.println("La cuenta 611 se actualizó exitosamente.");
-            } else {
-                System.out.println("No se actualizó la cuenta 611.");
+        // Verificamos si hay resultado
+        if (rs.next()) {
+            BigDecimal balance = rs.getBigDecimal("balance");
+
+            // Actualizamos la cuenta 611 con el balance calculado
+            try (PreparedStatement actualizarStmt = conn.prepareStatement(actualizarCuenta611Sql)) {
+                actualizarStmt.setBigDecimal(1, balance);
+                int rowsUpdated = actualizarStmt.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    System.out.println("La cuenta 611 se actualizó exitosamente con el balance calculado.");
+                } else {
+                    System.out.println("No se actualizó la cuenta 611.");
+                }
             }
-
-            stmt.close();
-            definirUtilidad();
-        } catch (SQLException e) {
-            enviarError("Error al definir cuenta 611");
+        } else {
+            System.out.println("No se encontraron datos para calcular el balance.");
         }
+
+        definirUtilidad();
+    } catch (SQLException e) {
+        enviarError("Error al definir cuenta 611");
     }
+}
     
     private void definirUtilidad() {
         String selectSql = "SELECT haber FROM sistemacontable.cuentas WHERE codigo = ?";
