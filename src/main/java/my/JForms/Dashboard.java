@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author programa
+ * @author Camilo Medrano
  */
 public class Dashboard extends javax.swing.JFrame {
     private Connection conn;
