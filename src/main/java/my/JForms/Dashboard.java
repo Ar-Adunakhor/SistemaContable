@@ -1475,7 +1475,8 @@ public class Dashboard extends javax.swing.JFrame {
     private void pagarPlanilla() {
         String selectPuestos = "SELECT id, puesto, salario_real, catalogo FROM sistemacontable.puestos";
         String insertTransaccion = "INSERT INTO sistemacontable.transacciones (fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber) VALUES (?, ?, ?, ?, ?, ?)";
-        String updateCuenta = "UPDATE sistemacontable.cuentas SET debe = debe + ? WHERE codigo = ?";
+        String updateCuentaDebe = "UPDATE sistemacontable.cuentas SET debe = debe + ? WHERE codigo = ?";
+        String updateCuentaHaber = "UPDATE sistemacontable.cuentas SET haber = haber + ? WHERE codigo = 111";
 
         try (
             PreparedStatement pstmtSelect = conn.prepareStatement(selectPuestos);
@@ -1502,10 +1503,16 @@ public class Dashboard extends javax.swing.JFrame {
                 }
 
                 // Actualizamos el saldo en la cuenta de debe en sistemacontable.cuentas
-                try (PreparedStatement pstmtUpdateCuenta = conn.prepareStatement(updateCuenta)) {
-                    pstmtUpdateCuenta.setBigDecimal(1, salarioAnual); // Sumar el salario anual al debe
-                    pstmtUpdateCuenta.setInt(2, cuentaDebe); // Código de la cuenta en el debe
-                    pstmtUpdateCuenta.executeUpdate();
+                try (PreparedStatement pstmtUpdateCuentaDebe = conn.prepareStatement(updateCuentaDebe)) {
+                    pstmtUpdateCuentaDebe.setBigDecimal(1, salarioAnual); // Sumar el salario anual al debe
+                    pstmtUpdateCuentaDebe.setInt(2, cuentaDebe); // Código de la cuenta en el debe
+                    pstmtUpdateCuentaDebe.executeUpdate();
+                }
+
+                // Actualizamos el saldo en el lado del haber de la cuenta 111 en sistemacontable.cuentas
+                try (PreparedStatement pstmtUpdateCuentaHaber = conn.prepareStatement(updateCuentaHaber)) {
+                    pstmtUpdateCuentaHaber.setBigDecimal(1, salarioAnual); // Sumar el salario anual al haber
+                    pstmtUpdateCuentaHaber.executeUpdate();
                 }
             }
 
@@ -1517,7 +1524,8 @@ public class Dashboard extends javax.swing.JFrame {
     private void pagarGastos() {
         String selectGastos = "SELECT id, nombre, monto, catalogo FROM sistemacontable.gastos";
         String insertTransaccion = "INSERT INTO sistemacontable.transacciones (fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber) VALUES (?, ?, ?, ?, ?, ?)";
-        String updateCuenta = "UPDATE sistemacontable.cuentas SET debe = debe + ? WHERE codigo = ?";
+        String updateCuentaDebe = "UPDATE sistemacontable.cuentas SET debe = debe + ? WHERE codigo = ?";
+        String updateCuentaHaber = "UPDATE sistemacontable.cuentas SET haber = haber + ? WHERE codigo = 111";
 
         try (
             PreparedStatement pstmtSelect = conn.prepareStatement(selectGastos);
@@ -1544,10 +1552,16 @@ public class Dashboard extends javax.swing.JFrame {
                 }
 
                 // Actualizamos el saldo en la cuenta de debe en sistemacontable.cuentas
-                try (PreparedStatement pstmtUpdateCuenta = conn.prepareStatement(updateCuenta)) {
-                    pstmtUpdateCuenta.setBigDecimal(1, montoAnual); // Sumar el monto anual al debe
-                    pstmtUpdateCuenta.setInt(2, cuentaDebe); // Código de la cuenta en el debe
-                    pstmtUpdateCuenta.executeUpdate();
+                try (PreparedStatement pstmtUpdateCuentaDebe = conn.prepareStatement(updateCuentaDebe)) {
+                    pstmtUpdateCuentaDebe.setBigDecimal(1, montoAnual); // Sumar el monto anual al debe
+                    pstmtUpdateCuentaDebe.setInt(2, cuentaDebe); // Código de la cuenta en el debe
+                    pstmtUpdateCuentaDebe.executeUpdate();
+                }
+
+                // Actualizamos el saldo en el lado del haber de la cuenta 111 en sistemacontable.cuentas
+                try (PreparedStatement pstmtUpdateCuentaHaber = conn.prepareStatement(updateCuentaHaber)) {
+                    pstmtUpdateCuentaHaber.setBigDecimal(1, montoAnual); // Sumar el monto anual al haber
+                    pstmtUpdateCuentaHaber.executeUpdate();
                 }
             }
 
@@ -1555,6 +1569,7 @@ public class Dashboard extends javax.swing.JFrame {
             enviarError("Error al pagar gastos");
         }
     }
+
 
     private void saldarCuentas() {
         try {
