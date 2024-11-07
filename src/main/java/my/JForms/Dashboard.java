@@ -1468,8 +1468,94 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_cierreContableJMnActionPerformed
 
     private void enviarCostosACuentas(){
-        
+        pagarPlanilla();
+        pagarGastos();
     }
+    
+    private void pagarPlanilla() {
+        String selectPuestos = "SELECT id, puesto, salario_real, catalogo FROM sistemacontable.puestos";
+        String insertTransaccion = "INSERT INTO sistemacontable.transacciones (fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber) VALUES (?, ?, ?, ?, ?, ?)";
+        String updateCuenta = "UPDATE sistemacontable.cuentas SET debe = debe + ? WHERE codigo = ?";
+
+        try (
+            PreparedStatement pstmtSelect = conn.prepareStatement(selectPuestos);
+            ResultSet rs = pstmtSelect.executeQuery()) {
+
+            // Procesamos cada fila de la tabla sistemacontable.puestos
+            while (rs.next()) {
+                int cuentaDebe = rs.getInt("catalogo");
+                String nombre = rs.getString("puesto");
+                BigDecimal salarioReal = rs.getBigDecimal("salario_real");
+
+                // Multiplicamos el salario por 12
+                BigDecimal salarioAnual = salarioReal.multiply(BigDecimal.valueOf(12));
+
+                // Insertamos una transacción en sistemacontable.transacciones
+                try (PreparedStatement pstmtInsert = conn.prepareStatement(insertTransaccion)) {
+                    pstmtInsert.setDate(1, Date.valueOf(LocalDate.now()));  // Fecha actual
+                    pstmtInsert.setString(2, "Pago a " + nombre);  // Descripción
+                    pstmtInsert.setInt(3, cuentaDebe);  // Cuenta en el debe
+                    pstmtInsert.setBigDecimal(4, salarioAnual);  // Monto en el debe
+                    pstmtInsert.setInt(5, 111);  // Cuenta en el haber (111: Caja)
+                    pstmtInsert.setBigDecimal(6, salarioAnual);  // Monto en el haber
+                    pstmtInsert.executeUpdate();
+                }
+
+                // Actualizamos el saldo en la cuenta de debe en sistemacontable.cuentas
+                try (PreparedStatement pstmtUpdateCuenta = conn.prepareStatement(updateCuenta)) {
+                    pstmtUpdateCuenta.setBigDecimal(1, salarioAnual); // Sumar el salario anual al debe
+                    pstmtUpdateCuenta.setInt(2, cuentaDebe); // Código de la cuenta en el debe
+                    pstmtUpdateCuenta.executeUpdate();
+                }
+            }
+
+        } catch (SQLException e) {
+            enviarError("Error al pagar planilla");
+        }
+    }
+
+    private void pagarGastos() {
+        String selectGastos = "SELECT id, nombre, monto, catalogo FROM sistemacontable.gastos";
+        String insertTransaccion = "INSERT INTO sistemacontable.transacciones (fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber) VALUES (?, ?, ?, ?, ?, ?)";
+        String updateCuenta = "UPDATE sistemacontable.cuentas SET debe = debe + ? WHERE codigo = ?";
+
+        try (
+            PreparedStatement pstmtSelect = conn.prepareStatement(selectGastos);
+            ResultSet rs = pstmtSelect.executeQuery()) {
+
+            // Procesamos cada fila de la tabla sistemacontable.gastos
+            while (rs.next()) {
+                int cuentaDebe = rs.getInt("catalogo");
+                String nombre = rs.getString("nombre");
+                BigDecimal monto = rs.getBigDecimal("monto");
+
+                // Multiplicamos el monto por 12
+                BigDecimal montoAnual = monto.multiply(BigDecimal.valueOf(12));
+
+                // Insertamos una transacción en sistemacontable.transacciones
+                try (PreparedStatement pstmtInsert = conn.prepareStatement(insertTransaccion)) {
+                    pstmtInsert.setDate(1, Date.valueOf(LocalDate.now()));  // Fecha actual
+                    pstmtInsert.setString(2, "Pago a " + nombre);  // Descripción
+                    pstmtInsert.setInt(3, cuentaDebe);  // Cuenta en el debe
+                    pstmtInsert.setBigDecimal(4, montoAnual);  // Monto en el debe
+                    pstmtInsert.setInt(5, 111);  // Cuenta en el haber (111: Caja)
+                    pstmtInsert.setBigDecimal(6, montoAnual);  // Monto en el haber
+                    pstmtInsert.executeUpdate();
+                }
+
+                // Actualizamos el saldo en la cuenta de debe en sistemacontable.cuentas
+                try (PreparedStatement pstmtUpdateCuenta = conn.prepareStatement(updateCuenta)) {
+                    pstmtUpdateCuenta.setBigDecimal(1, montoAnual); // Sumar el monto anual al debe
+                    pstmtUpdateCuenta.setInt(2, cuentaDebe); // Código de la cuenta en el debe
+                    pstmtUpdateCuenta.executeUpdate();
+                }
+            }
+
+        } catch (SQLException e) {
+            enviarError("Error al pagar gastos");
+        }
+    }
+
     private void saldarCuentas() {
         try {
             // Consulta para obtener todas las cuentas
@@ -2383,20 +2469,20 @@ public class Dashboard extends javax.swing.JFrame {
     }
     
     private void ingresarTransaccion() {
-        String sql = "INSERT INTO sistemacontable.transacciones (numero, fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sistemacontable.transacciones (fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         BigDecimal monto = new BigDecimal(montoTxt.getText());
         monto = monto.subtract(new BigDecimal(descuentoTxt.getText()));
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, Integer.parseInt(numSpn.getValue().toString())); 
-            pstmt.setDate(2, Date.valueOf(fechaPck.getDate()));
-            pstmt.setString(3, descripcionTxt.getText());
-            pstmt.setInt(4, Integer.parseInt(cuentaDebeTxt.getText().trim()));
-            pstmt.setBigDecimal(5, monto);
-            pstmt.setInt(6, Integer.parseInt(cuentaHaberTxt.getText().trim()));
-            pstmt.setBigDecimal(7, monto);
-            pstmt.setNull(8, Types.INTEGER); // O bien, puedes usar 0 si así lo requiere tu esquema
-            pstmt.setNull(9, Types.DECIMAL); // O bien, puedes usar BigDecimal.ZERO si así lo requiere tu esquema
+            //pstmt.setInt(1, Integer.parseInt(numSpn.getValue().toString())); 
+            pstmt.setDate(1, Date.valueOf(fechaPck.getDate()));
+            pstmt.setString(2, descripcionTxt.getText());
+            pstmt.setInt(3, Integer.parseInt(cuentaDebeTxt.getText().trim()));
+            pstmt.setBigDecimal(4, monto);
+            pstmt.setInt(5, Integer.parseInt(cuentaHaberTxt.getText().trim()));
+            pstmt.setBigDecimal(6, monto);
+            pstmt.setNull(7, Types.INTEGER); // O bien, puedes usar 0 si así lo requiere tu esquema
+            pstmt.setNull(8, Types.DECIMAL); // O bien, puedes usar BigDecimal.ZERO si así lo requiere tu esquema
 
             pstmt.executeUpdate();
             modificarCuentas(
@@ -2413,7 +2499,7 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }
     private void ingresarTransaccion(int cuentaIVA) {
-        String sql = "INSERT INTO sistemacontable.transacciones (numero, fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sistemacontable.transacciones (fecha, descripcion, cuenta_debe_id, monto_debe, cuenta_haber_id, monto_haber, cuenta_iva_id, monto_iva) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         BigDecimal monto = new BigDecimal(montoTxt.getText());
         //int porcentajeSeleccionado = porcentajeCmb.getSelectedIndex();
         BigDecimal porcentajeIVA = BigDecimal.valueOf(0.13);
@@ -2422,24 +2508,24 @@ public class Dashboard extends javax.swing.JFrame {
         BigDecimal montoHaber = monto;
         
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, Integer.parseInt(numSpn.getValue().toString()));
-            pstmt.setDate(2, Date.valueOf(fechaPck.getDate()));
-            pstmt.setString(3, descripcionTxt.getText());
+            //pstmt.setInt(1, Integer.parseInt(numSpn.getValue().toString()));
+            pstmt.setDate(1, Date.valueOf(fechaPck.getDate()));
+            pstmt.setString(2, descripcionTxt.getText());
                 if(cuentaIVA==115){
                     montoHaber = montoHaber.add(montoIVA);
-                    pstmt.setInt(4, Integer.parseInt(cuentaDebeTxt.getText().trim()));
-                    pstmt.setBigDecimal(5, montoDebe);
-                    pstmt.setInt(6, Integer.parseInt(cuentaHaberTxt.getText().trim()));
-                    pstmt.setBigDecimal(7, montoHaber);
+                    pstmt.setInt(3, Integer.parseInt(cuentaDebeTxt.getText().trim()));
+                    pstmt.setBigDecimal(4, montoDebe);
+                    pstmt.setInt(5, Integer.parseInt(cuentaHaberTxt.getText().trim()));
+                    pstmt.setBigDecimal(6, montoHaber);
                 }else{
                     montoDebe = montoDebe.add(montoIVA);
-                    pstmt.setInt(4, Integer.parseInt(cuentaDebeTxt.getText().trim()));
-                    pstmt.setBigDecimal(5, montoDebe);
-                    pstmt.setInt(6, Integer.parseInt(cuentaHaberTxt.getText().trim()));
-                    pstmt.setBigDecimal(7, montoHaber);
+                    pstmt.setInt(3, Integer.parseInt(cuentaDebeTxt.getText().trim()));
+                    pstmt.setBigDecimal(4, montoDebe);
+                    pstmt.setInt(5, Integer.parseInt(cuentaHaberTxt.getText().trim()));
+                    pstmt.setBigDecimal(6, montoHaber);
                 }
-            pstmt.setInt(8, cuentaIVA);
-            pstmt.setBigDecimal(9, montoIVA);
+            pstmt.setInt(7, cuentaIVA);
+            pstmt.setBigDecimal(8, montoIVA);
 
             pstmt.executeUpdate();
             modificarCuentas(
