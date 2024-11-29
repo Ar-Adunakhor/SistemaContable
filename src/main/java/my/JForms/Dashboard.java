@@ -677,8 +677,8 @@ public class Dashboard extends javax.swing.JFrame {
         personalTbl.setFont(new java.awt.Font("JetBrains Mono", 0, 14)); // NOI18N
         jScrollPane9.setViewportView(personalTbl);
 
-        jLabel36.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         jLabel36.setText("Cuenta en cátalago asociada");
+        jLabel36.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
         cuentaAsociadaPuestoTxt.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
@@ -838,8 +838,8 @@ public class Dashboard extends javax.swing.JFrame {
         gastoCategoriaCmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Costos directos de fabricación", "Gastos de comercialización" }));
         gastoCategoriaCmb.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
 
-        jLabel37.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
         jLabel37.setText("Cuenta en cátalago asociada:");
+        jLabel37.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
         cuentaAsociadaGastosTxt.setFont(new java.awt.Font("JetBrains Mono", 0, 17)); // NOI18N
 
@@ -1613,7 +1613,7 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }
     private void definirCuenta611() {
-    String calcularBalanceSql = "SELECT SUM(debe) - SUM(haber) AS balance FROM sistemacontable.cuentas WHERE tipo_balance = 0";
+    String calcularBalanceSql = "SELECT SUM(haber) - SUM(debe) AS balance FROM sistemacontable.cuentas WHERE tipo_balance = 0";
     String actualizarCuenta611Sql = "UPDATE sistemacontable.cuentas SET haber = ? WHERE codigo = 611";
 
     try (
@@ -1647,7 +1647,7 @@ public class Dashboard extends javax.swing.JFrame {
     
     private void definirUtilidad() {
         String selectSql = "SELECT haber FROM sistemacontable.cuentas WHERE codigo = ?";
-        String updateSql = "UPDATE sistemacontable.cuentas SET haber = haber + ? WHERE codigo = ?";
+        String updateSql = "UPDATE sistemacontable.cuentas SET haber = ? WHERE codigo = ?";
 
         try (PreparedStatement selectStmt = conn.prepareStatement(selectSql);
              PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
@@ -1688,6 +1688,8 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void nuevosSaldosIniciales() {
         try {
+            flujoneto();
+            borrarUtilidadLiquidez();
             // Consulta para obtener todas las cuentas
             String sql = "SELECT codigo, naturaleza, debe, haber FROM sistemacontable.cuentas";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -1723,45 +1725,29 @@ public class Dashboard extends javax.swing.JFrame {
 
             rs.close();
             stmt.close();
-            borrarUtilidadLiquidez();
-            flujoneto();
         } catch (SQLException e) {
             enviarError("Error al realizar nuevo ciclo contable");
         }
     }
     
     private void flujoneto() {
-        // Consultas para obtener Ventas netas y Compras netas
-        String queryVentasNetas = "SELECT cantidad FROM sistemacontable.analitico WHERE nombre = 'Ventas netas'";
-        String queryComprasNetas = "SELECT cantidad FROM sistemacontable.analitico WHERE nombre = 'Compras netas'";
+        String selectSql = "SELECT haber FROM sistemacontable.cuentas WHERE codigo = 321";
+        String updateSql = "UPDATE sistemacontable.cuentas SET haber = ? WHERE codigo = 311";
 
-        // Consulta para actualizar el saldo inicial de la cuenta de capital (código 311)
-        String updateSaldoInicial = "UPDATE sistemacontable.cuentas SET saldo_inicial = saldo_inicial + ? WHERE codigo = 311";
+        try (PreparedStatement selectStmt = conn.prepareStatement(selectSql);
+             PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
 
-        try (PreparedStatement stmtVentasNetas = conn.prepareStatement(queryVentasNetas);
-             PreparedStatement stmtComprasNetas = conn.prepareStatement(queryComprasNetas);
-             PreparedStatement stmtUpdateSaldoInicial = conn.prepareStatement(updateSaldoInicial)) {
+            // Ejecutar la consulta para obtener el valor de 'haber' de la cuenta 321
+            ResultSet rs = selectStmt.executeQuery();
+            if (rs.next()) {
+                double haberValue = rs.getDouble("haber");
 
-            // Obtener Ventas netas
-            BigDecimal ventasNetas = executeSingleValueQuery(stmtVentasNetas);
-            // Obtener Compras netas
-            BigDecimal comprasNetas = executeSingleValueQuery(stmtComprasNetas);
-
-            // Calcular el flujo neto: Ventas netas - Compras netas
-            BigDecimal flujoNeto = ventasNetas.subtract(comprasNetas);
-
-            // Actualizar el saldo inicial de la cuenta de capital (código 311)
-            stmtUpdateSaldoInicial.setBigDecimal(1, flujoNeto);
-            int rowsUpdated = stmtUpdateSaldoInicial.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                System.out.println("El flujo neto se ha sumado correctamente al saldo inicial de la cuenta de capital.");
-            } else {
-                System.out.println("No se encontró la cuenta de capital con el código 311.");
+                // Actualizar el 'haber' de la cuenta 311 con el valor obtenido
+                updateStmt.setDouble(1, haberValue);
+                updateStmt.executeUpdate();
             }
-
         } catch (SQLException e) {
-            enviarError("Error al calcular y actualizar el flujo neto.");
+            enviarError("No se pudo actualizar la cuenta 311");
         }
     }
     private void borrarUtilidadLiquidez() {
@@ -1792,11 +1778,11 @@ public class Dashboard extends javax.swing.JFrame {
     private void saldarCuentasEstadoFinancieros() {
         String queryCuentas = "SELECT codigo, debe, haber, naturaleza FROM sistemacontable.cuentas WHERE codigo IN (SELECT codigo FROM sistemacontable.analitico WHERE codigo IS NOT NULL)";
         String updateAnalitico = "UPDATE sistemacontable.analitico SET cantidad = ? WHERE codigo = ?";
-        String updateCuentas = "UPDATE sistemacontable.cuentas SET debe = 0, haber = 0 WHERE codigo = ?";
+        //String updateCuentas = "UPDATE sistemacontable.cuentas SET debe = 0, haber = 0 WHERE codigo = ?";
 
         try (PreparedStatement stmtCuentas = conn.prepareStatement(queryCuentas);
              PreparedStatement stmtAnalitico = conn.prepareStatement(updateAnalitico);
-             PreparedStatement stmtUpdateCuentas = conn.prepareStatement(updateCuentas);
+             //PreparedStatement stmtUpdateCuentas = conn.prepareStatement(updateCuentas);
              ResultSet rs = stmtCuentas.executeQuery()) {
 
             while (rs.next()) {
@@ -1814,8 +1800,8 @@ public class Dashboard extends javax.swing.JFrame {
                 stmtAnalitico.executeUpdate();
 
                 // Poner a cero debe o haber en la tabla cuentas
-                stmtUpdateCuentas.setInt(1, codigo);
-                stmtUpdateCuentas.executeUpdate();
+                //stmtUpdateCuentas.setInt(1, codigo);
+                //stmtUpdateCuentas.executeUpdate();
             }
             formulaEstadosFinancieros();
 

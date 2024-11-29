@@ -1373,10 +1373,10 @@
                         </Container>
                         <Component class="javax.swing.JLabel" name="jLabel36">
                           <Properties>
+                            <Property name="text" type="java.lang.String" value="Cuenta en c&#xe1;talago asociada"/>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="JetBrains Mono" size="17" style="0"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value="Cuenta en c&#xe1;talago asociada"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JFormattedTextField" name="cuentaAsociadaPuestoTxt">
@@ -1584,10 +1584,10 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel37">
                           <Properties>
+                            <Property name="text" type="java.lang.String" value="Cuenta en c&#xe1;talago asociada:"/>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="JetBrains Mono" size="17" style="0"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value="Cuenta en c&#xe1;talago asociada:"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JFormattedTextField" name="cuentaAsociadaGastosTxt">
@@ -1924,10 +1924,10 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="nuevaCuentaNombreTxt">
                   <Properties>
-                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="JetBrains Mono" size="17" style="0"/>
                     </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel20">
